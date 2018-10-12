@@ -12,32 +12,42 @@ class ListItem extends React.Component{
             checked: false,
         }
         this.itemsSelected = []
+        this.item = {
+            itemName: this.props.itemName, 
+            itemPrice: this.props.itemPrice, 
+            area: this.props.metaData
+        }
+        // alert(JSON.stringify(this.item.area))
     }
 
+    addToBasket() {
+        items.addItem = this.item
+        // alert(JSON.stringify(items.itemsSelected)+ items.getItems.length)
+        this.setState({checked: true})
+    }
+    cancelAddToBasket() {
+        this.itemsSelected = items.getItems.filter(i => i.itemName !== this.item.itemName )                      
+        items.setItemsSelected = this.itemsSelected
+        this.setState({checked: false})
+    }
+    throughBackFromTheBasket() {
+        // need to work here
+    }
+
+
     checkbox(){
-        const {itemName, itemPrice } = this.props;
-        const item = {itemName, itemPrice, area: this.props.metaData.area}
 
         if (this.state.checked) {
             return(
                 <TouchableOpacity style = {{borderColor: 'red'}} 
-                    onPress = {()=> {
-                        this.itemsSelected = items.getItems.filter(i => i.itemName !== itemName )                      
-                        items.setItemsSelected = this.itemsSelected
-                        alert(JSON.stringify(items.getItems))
-                        this.setState({checked: false})}
-                    }>
+                    onPress = {()=> this.cancelAddToBasket()}>
                     <Image source = {selected}/>
                 </TouchableOpacity>
             );
         }
         return(
             <TouchableOpacity  style = {{borderColor: 'red'}} 
-                onPress = {()=> {
-                    items.addItem = item
-                    // alert(JSON.stringify(items.itemsSelected)+ items.getItems.length)
-                    this.setState({checked: true})}
-                }>
+                onPress = {()=> this.addToBasket()}>
                 <Image source = {select}/>
             </TouchableOpacity>
         );

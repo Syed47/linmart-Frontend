@@ -12,10 +12,16 @@ class CheckOut extends React.Component{
 		this.passedInfo = [...items.getItems]
 		this.totalPrice = 0
 		this.passedInfo.forEach(item => this.totalPrice += item.itemPrice );
+		// alert(JSON.stringify(this.passedInfo))
 	}
 	
 	renderItemsSelected = () => (this.passedInfo.map(item => (
-			<ListItem itemName = {item.itemName} itemPrice = {item.itemPrice}/>)
+			<ListItem itemName = {item.itemName} 
+					itemPrice = {item.itemPrice}
+					action = 'throughBack' 
+					checkbox = {true}
+					metaData = {this.passedInfo}/> 
+			)
 		)
 	)
 
@@ -29,7 +35,7 @@ class CheckOut extends React.Component{
 			<View style = {styles.main}>
 				<View style = {styles.msgbox_wrapper}>
 					<Text style = {{fontSize: 20, paddingHorizontal: '2%', color: 'purple'}}>
-						Please confirm!     
+						Please confirm!
 					</Text>
 	                <TouchableOpacity style={styles.buttonShape}
                         onPress={() => { alert("Calling...") }}>

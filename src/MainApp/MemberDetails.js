@@ -11,6 +11,7 @@ class MemberDetails extends React.Component {
     constructor(props) {
         super(props);
         this.passedDetails = this.props.navigation.state.params.info;
+        // alert(JSON.stringify(this.passedDetails))
     }
 
     render(){
@@ -41,7 +42,7 @@ class MemberDetails extends React.Component {
                                             itemPrice = {item.price} 
                                             action = 'toTheBasket' 
                                             checkbox = {true}
-                                            metaData = {this.passedDetails.area}/>
+                                            metaData = {this.passedDetails}/>
                         }
                     />
                 </View>
