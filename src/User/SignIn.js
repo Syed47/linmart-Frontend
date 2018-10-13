@@ -15,7 +15,7 @@ class SignIn extends React.Component{
     }
 
     signIn(){
-        fetch('http://172.23.1.27:3000/signin', {
+        fetch('http://192.168.0.11:3000/signin', {
             method: 'POST', 
             body: JSON.stringify({phone : this.state.phone}), 
             headers: {

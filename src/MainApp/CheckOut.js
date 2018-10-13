@@ -12,19 +12,20 @@ class CheckOut extends React.Component{
 		this.passedInfo = [...items.getItems]
 		this.totalPrice = 0
 		this.passedInfo.forEach(item => this.totalPrice += item.itemPrice );
-		// alert(JSON.stringify(this.passedInfo))
+		
 	}
 	
-	renderItemsSelected = () => (this.passedInfo.map(item => (
+	renderItemsSelected = () => (this.passedInfo.map(item => { 
+		alert(JSON.stringify(item));
+		return (			
 			<ListItem itemName = {item.itemName} 
 					itemPrice = {item.itemPrice}
 					action = 'throughBack' 
 					checkbox = {true}
-					metaData = {this.passedInfo}/> 
-			)
-		)
+					metaData = {this.passedInfo}/> 		
+		)})
 	)
-
+			
 
 	render(){
 

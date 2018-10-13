@@ -10,7 +10,7 @@ class Home extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            url: 'http://172.23.1.27:3000', // get from the browser sidebar
+            url: 'http://192.168.0.11:3000', // get from the browser sidebar
             passedInfo: [],
         }
         
@@ -30,8 +30,7 @@ class Home extends React.Component{
     render = () => { return (
         <View style={styles.main}>
 
-            <ScrollView contentContainerStyle={styles.scroll} 
-                    onRefresh = {()=> this.fetchData()} >
+            <ScrollView contentContainerStyle={styles.scroll}>
                 <Header />
                 <SearchFilter />
                 {this.renderMembers(this.state.passedInfo)}

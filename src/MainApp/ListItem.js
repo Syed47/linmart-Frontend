@@ -15,18 +15,16 @@ class ListItem extends React.Component{
         this.item = {
             itemName: this.props.itemName, 
             itemPrice: this.props.itemPrice, 
-            area: this.props.metaData
+            area: this.props.area
         }
-        // alert(JSON.stringify(this.item.area))
     }
 
     addToBasket() {
         items.addItem = this.item
-        // alert(JSON.stringify(items.itemsSelected)+ items.getItems.length)
         this.setState({checked: true})
     }
     cancelAddToBasket() {
-        this.itemsSelected = items.getItems.filter(i => i.itemName !== this.item.itemName )                      
+        this.itemsSelected = [...items.getItems].filter(i => i.itemName !== this.item.itemName)                      
         items.setItemsSelected = this.itemsSelected
         this.setState({checked: false})
     }
@@ -46,7 +44,7 @@ class ListItem extends React.Component{
             );
         }
         return(
-            <TouchableOpacity  style = {{borderColor: 'red'}} 
+            <TouchableOpacity  style = {{borderßColor: 'red'}} 
                 onPress = {()=> this.addToBasket()}>
                 <Image source = {select}/>
             </TouchableOpacity>
