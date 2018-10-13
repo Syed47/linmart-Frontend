@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet,TouchableOpacity,Image,ScrollView,Dimensions } from 'react-native';
+import { View, Text, StyleSheet,TouchableOpacity,Image,ScrollView } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import ListItem from './ListItem';
 import items from './items';
@@ -8,24 +8,24 @@ class CheckOut extends React.Component{
 
 	constructor(props) {
 		super(props);
-		this.state = {}
-		this.passedInfo = [...items.getItems]
-		this.totalPrice = 0
-		this.passedInfo.forEach(item => this.totalPrice += item.itemPrice );
+		this.state = {
+			items: [...items.getItems],
+			totalPrice: 0
+		}
+		this.state.items.forEach(item => this.state.totalPrice += item.itemPrice );
 		
 	}
 	
-	renderItemsSelected = () => (this.passedInfo.map(item => { 
-		alert(JSON.stringify(item));
+	renderItemsSelected = () => (this.state.items.map(item => { 
 		return (			
 			<ListItem itemName = {item.itemName} 
 					itemPrice = {item.itemPrice}
 					action = 'throughBack' 
-					checkbox = {true}
-					metaData = {this.passedInfo}/> 		
+					cross = {true}
+					area = {item.area}/> 		
 		)})
 	)
-			
+
 
 	render(){
 
@@ -51,7 +51,7 @@ class CheckOut extends React.Component{
 					</View>
 					<View style = {styles.summery_item}>
 						<Text style = {styles.variable}>Items Bought: </Text>
-						<Text style = {styles.value}>{this.passedInfo.length}</Text>	
+						<Text style = {styles.value}>{this.state.items.length}</Text>	
 					</View>
 					<View style = {styles.summery_item}>
 						<Text style = {styles.variable}>Time Bought: </Text>
@@ -64,7 +64,7 @@ class CheckOut extends React.Component{
 					<View style = {styles.summery_item}>
 						<Text style = {styles.variable}>Total:</Text>
 						<Text style = {styles.value}>
-							£: {this.totalPrice.toString().substring(0,5)}
+							£: {this.state.totalPrice.toString().substring(0,5)}
 						</Text>
 					</View>
 				</View>
