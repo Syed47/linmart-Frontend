@@ -1,4 +1,6 @@
 
+import React, {Component} from 'react';
+
 export default itemsList = {
     itemsSelected: [],
     get getItems() {
@@ -13,20 +15,3 @@ export default itemsList = {
 }
 
 // can this be implemented as react class component without render or JSX
-
-// class itemsList {
-//     constructor(props) {
-//         super(props)
-//         this.state = {
-//             itemsSelected: []
-//         }
-//     }
-//     get getItems() {
-//         this.state.itemsSelected
-//     }
-//     set setItemsSelected(list) {
-//         this.setState({
-//             itemsSelected: [...list]
-//         })
-//     }
-// }

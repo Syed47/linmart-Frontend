@@ -15,15 +15,22 @@ class CheckOut extends React.Component{
 		this.state.items.forEach(item => this.state.totalPrice += item.itemPrice );
 		
 	}
+
+	refresh() {
+		this.setState({
+			items: [...items.getItems],
+			totalPrice: 0
+		})
+	}
 	
-	renderItemsSelected = () => (this.state.items.map(item => { 
-		return (			
+	renderItemsSelected = () => (this.state.items.map(item => (			
 			<ListItem itemName = {item.itemName} 
 					itemPrice = {item.itemPrice}
 					action = 'throughBack' 
 					cross = {true}
-					area = {item.area}/> 		
-		)})
+					area = {item.area}
+					refresh = {this.refresh.bind(this)}/> 		
+		))
 	)
 
 

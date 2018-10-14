@@ -4,40 +4,40 @@ import select from './icons/select.png';
 import selected from './icons/selected.png';
 import items from './items'
 import cross from './icons/cross.png';
-
 class ListItem extends React.Component{
 
     constructor(props) {
         super(props);
         this.state = {
             checked: false,
-            items: [...items.getItems]
         }
         this.itemsSelected = []
-        this.item = {
+        this.item = { 
             itemName: this.props.itemName, 
             itemPrice: this.props.itemPrice, 
             area: this.props.area
         }
     }
-
+    
+    // accessible from MemberDetails Component
     addToBasket() {
         items.addItem = this.item
         this.setState({checked: true})
     }
+    // accessible from MemberDetails Component
     cancelAddToBasket() {
         this.itemsSelected = [...items.getItems].filter(i => i.itemName !== this.item.itemName)                      
         items.setItemsSelected = this.itemsSelected
         this.setState({checked: false})
     }
+    // accessible from Checkout Component
     throughBackFromTheBasket() {
-        this.itemsSelected = this.state.items.filter(i => i.itemName !== this.item.itemName)                      
+        this.itemsSelected = [...items.getItems].filter(i => i.itemName !== this.item.itemName)                      
         items.setItemsSelected = this.itemsSelected
-        this.setState({
-            items: this.itemsSelected
-        })
+        this.props.refresh()
+        
     }
-
+    // can only be seen in Checkout Component
     crossBox() {
         return(
             <TouchableOpacity style = {{borderColor: 'red'}} 
@@ -46,10 +46,10 @@ class ListItem extends React.Component{
             </TouchableOpacity>
         );  
     } 
-
+    // can only be seen in MemberDetails Component
     checkbox(){
-
-        if (this.state.checked) {
+        // checked -> is controlled from inside this function to change images
+        if (this.state.checked) { 
             return(
                 <TouchableOpacity style = {{borderColor: 'red'}} 
                     onPress = {()=> this.cancelAddToBasket()}>
@@ -58,7 +58,7 @@ class ListItem extends React.Component{
             );
         }
         return(
-            <TouchableOpacity  style = {{borderColor: 'red'}} 
+            <TouchableOpacity  style = {{borderßColor: 'red'}} 
                 onPress = {()=> this.addToBasket()}>
                 <Image source = {select}/>
             </TouchableOpacity>

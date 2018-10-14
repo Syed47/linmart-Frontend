@@ -4,8 +4,6 @@ import { withNavigation } from 'react-navigation';
 import Card from './Card';
 import ListItem from './ListItem';
 
-// this.props.navigation.state.params.title
-
 class MemberDetails extends React.Component {
 
     constructor(props) {
