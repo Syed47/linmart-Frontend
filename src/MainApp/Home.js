@@ -40,7 +40,7 @@ class Home extends React.Component{
     )} 
 }
 
-
+console.disableYellowBox = true
 const styles = StyleSheet.create({
     main:{
         flex: 1,

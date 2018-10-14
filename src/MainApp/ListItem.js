@@ -11,7 +11,8 @@ class ListItem extends React.Component{
         this.state = {
             checked: false,
         }
-        this.itemsSelected = []
+        // this.itemsSelected = []
+        //this data comes from MemberDetails & Checkout, depending on where the component renders
         this.item = { 
             itemName: this.props.itemName, 
             itemPrice: this.props.itemPrice, 
@@ -21,21 +22,20 @@ class ListItem extends React.Component{
     
     // accessible from MemberDetails Component
     addToBasket() {
-        items.addItem = this.item
-        this.setState({checked: true})
+        items.addItem(this.item)
+        this.setState({checked: true}) 
     }
     // accessible from MemberDetails Component
     cancelAddToBasket() {
-        this.itemsSelected = [...items.getItems].filter(i => i.itemName !== this.item.itemName)                      
-        items.setItemsSelected = this.itemsSelected
+        items.setItemsSelected = [...items.getItems].filter(i => i.itemName !== this.item.itemName) 
         this.setState({checked: false})
     }
     // accessible from Checkout Component
-    throughBackFromTheBasket() {
-        this.itemsSelected = [...items.getItems].filter(i => i.itemName !== this.item.itemName)                      
-        items.setItemsSelected = this.itemsSelected
+    throughBackFromTheBasket() { 
+        /*Do not replace 'this.props.itemName by this.item.itemName, even though there are the same'*/
+        items.setItemsSelected = items.getItems.filter(i => i.itemName !== this.props.itemName)
         this.props.refresh()
-        
+        // alert(JSON.stringify(items.getItems.map(item => item.itemName))+this.item.itemName+items.getItems.length)
     }
     // can only be seen in Checkout Component
     crossBox() {

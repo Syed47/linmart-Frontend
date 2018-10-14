@@ -2,15 +2,15 @@
 import React, {Component} from 'react';
 
 export default itemsList = {
-    itemsSelected: [],
+    __itemsSelected: [], // stays private
     get getItems() {
-        return this.itemsSelected
+        return this.__itemsSelected
     },
-    set addItem(item) {
-        this.itemsSelected.push(item)
+    addItem(item) {
+        this.__itemsSelected.push(item)
     },
     set setItemsSelected(list) {
-        this.itemsSelected = [...list]
+        this.__itemsSelected = list //[...list]
     }
 }
 

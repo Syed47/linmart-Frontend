@@ -9,29 +9,38 @@ class CheckOut extends React.Component{
 	constructor(props) {
 		super(props);
 		this.state = {
-			items: [...items.getItems],
-			totalPrice: 0
-		}
-		this.state.items.forEach(item => this.state.totalPrice += item.itemPrice );
-		
+			items: items.getItems,
+			totalPrice: items.getItems.reduce((total, item) => total += item.itemPrice, 0)
+		}		
 	}
 
 	refresh() {
 		this.setState({
-			items: [...items.getItems],
-			totalPrice: 0
+			items: items.getItems,
+			totalPrice: items.getItems.reduce((total, item) => total += item.itemPrice, 0)
 		})
 	}
-	
-	renderItemsSelected = () => (this.state.items.map(item => (			
-			<ListItem itemName = {item.itemName} 
-					itemPrice = {item.itemPrice}
-					action = 'throughBack' 
-					cross = {true}
-					area = {item.area}
-					refresh = {this.refresh.bind(this)}/> 		
+
+	renderItemsSelected() {
+		return(this.state.items.map(item => {
+			return(<ListItem itemName = {item.itemName} 
+							itemPrice = {item.itemPrice}
+							cross = {true}
+							area = {item.area}
+							refresh = {this.refresh.bind(this)}/> 	
+			)}
 		))
-	)
+	}
+
+	
+	// renderItemsSelected = () => (this.state.items.map(item => (			
+	// 		<ListItem itemName = {item.itemName} 
+	// 				itemPrice = {item.itemPrice}
+	// 				cross = {true}
+	// 				area = {item.area}
+	// 				refresh = {this.refresh.bind(this)}/> 		
+	// 	))
+	// )
 
 
 	render(){
@@ -46,7 +55,12 @@ class CheckOut extends React.Component{
 						Please confirm!
 					</Text>
 	                <TouchableOpacity style={styles.buttonShape}
-                        onPress={() => { alert("Calling...") }}>
+                        onPress={() => { 
+							alert(
+								JSON.stringify(this.state.items.map(item => item.itemName)) + 
+								JSON.stringify(items.getItems.map(item => item.itemName)) 
+							)
+                         }}>
                         <Text style={{fontSize: 18,color: 'white'}}>Confirm</Text>
                         <Image source = {require('./icons/confirm.png')}/>
 	                </TouchableOpacity>

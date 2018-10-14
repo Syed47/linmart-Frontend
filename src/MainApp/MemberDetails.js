@@ -37,7 +37,6 @@ class MemberDetails extends React.Component {
                         renderItem = {
                             ({item})=> <ListItem  itemName = {item.name} 
                                             itemPrice = {item.price} 
-                                            action = 'toTheBasket' 
                                             checkbox = {true}
                                             area = {this.passedDetails.area}/>
                         }
