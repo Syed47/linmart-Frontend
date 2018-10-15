@@ -11,59 +11,45 @@ class ListItem extends React.Component{
         this.state = {
             checked: false,
         }
-        // this.itemsSelected = []
-        //this data comes from MemberDetails & Checkout, depending on where the component renders
-        this.item = { 
-            itemName: this.props.itemName, 
-            itemPrice: this.props.itemPrice, 
-            area: this.props.area
-        }
     }
     
     // accessible from MemberDetails Component
     addToBasket() {
-        items.addItem(this.item)
+        items.addItem({ 
+            itemName: this.props.itemName, 
+            itemPrice: this.props.itemPrice, 
+            area: this.props.area
+        })
         this.setState({checked: true}) 
     }
+
     // accessible from MemberDetails Component
     cancelAddToBasket() {
-        items.setItemsSelected = [...items.getItems].filter(i => i.itemName !== this.item.itemName) 
+        items.setItemsSelected = [...items.getItem]s.filter(i => i.itemName !== this.props.itemName) 
         this.setState({checked: false})
     }
     // accessible from Checkout Component
     throughBackFromTheBasket() { 
-        /*Do not replace 'this.props.itemName by this.item.itemName, even though there are the same'*/
-        items.setItemsSelected = items.getItems.filter(i => i.itemName !== this.props.itemName)
+        items.setItemsSelected = [...items.getItems].filter(i => i.itemName !== this.props.itemName)
         this.props.refresh()
-        // alert(JSON.stringify(items.getItems.map(item => item.itemName))+this.item.itemName+items.getItems.length)
     }
-    // can only be seen in Checkout Component
-    crossBox() {
-        return(
+
+    // BoilerPlate Function : this function returns a wrapper for images inside a listitem
+    checkCross = (image, action) => (
             <TouchableOpacity style = {{borderColor: 'red'}} 
-                onPress = {()=> this.throughBackFromTheBasket()}>
-                <Image source = {cross}/>
+                onPress = {()=> action()}>
+                <Image source = {image}/>
             </TouchableOpacity>
-        );  
-    } 
+    );
+
+    // can only be seen in Checkout Component
+    crossBox = () => this.checkCross(cross, this.throughBackFromTheBasket.bind(this));  
+
     // can only be seen in MemberDetails Component
-    checkbox(){
-        // checked -> is controlled from inside this function to change images
-        if (this.state.checked) { 
-            return(
-                <TouchableOpacity style = {{borderColor: 'red'}} 
-                    onPress = {()=> this.cancelAddToBasket()}>
-                    <Image source = {selected}/>
-                </TouchableOpacity>
-            );
-        }
-        return(
-            <TouchableOpacity  style = {{borderßColor: 'red'}} 
-                onPress = {()=> this.addToBasket()}>
-                <Image source = {select}/>
-            </TouchableOpacity>
-        );
-    }
+    checkbox = () => ( // checked -> is controlled from inside this function to change images
+        this.state.checked ? this.checkCross(selected, this.cancelAddToBasket.bind(this)) :
+                        this.checkCross(select, this.addToBasket.bind(this))
+    )
 
     render(){
 

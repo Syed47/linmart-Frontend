@@ -10,8 +10,6 @@ export default itemsList = {
         this.__itemsSelected.push(item)
     },
     set setItemsSelected(list) {
-        this.__itemsSelected = list //[...list]
+        this.__itemsSelected = [...list]
     }
 }
-
-// can this be implemented as react class component without render or JSX
