@@ -5,12 +5,12 @@ import Header from  './Header';
 import SearchFilter from './SearchFilter';
 import Card from './Card';
 
-class Home extends React.Component{
+class Home extends React.Component {
     
     constructor(props) {
         super(props);
         this.state = {
-            url: 'http://192.168.0.11:3000', // get from the browser sidebar
+            url: 'http://192.168.0.11:8080/getMembers', // get from the browser sidebar in expo tab
             passedInfo: [],
         }
         
@@ -19,23 +19,21 @@ class Home extends React.Component{
     // Request to the server to get members data
     fetchData() {
         fetch(this.state.url)
-        .then(res => res.json())
-        .then(data => { this.setState({passedInfo : data.members })})
-        .catch(err => alert(err)) 
+            .then(res => res.json())
+            .then(data => { this.setState({passedInfo : data.members })})
+            .catch(err => alert(err)) 
     }
 
     // Render each member to the data received
-    renderMembers = members =>  members.map((members, index) => <Card info={members} key = {index}/>);
+    renderMembers = members => members.map((members, index) => <Card info={members} key = {index}/>);
 
     render = () => { return (
         <View style={styles.main}>
-
             <ScrollView contentContainerStyle={styles.scroll}>
                 <Header />
                 <SearchFilter />
                 {this.renderMembers(this.state.passedInfo)}
             </ScrollView>
-
         </View>
     )} 
 }

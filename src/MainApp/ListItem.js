@@ -25,7 +25,7 @@ class ListItem extends React.Component{
 
     // accessible from MemberDetails Component
     cancelAddToBasket() {
-        items.setItemsSelected = [...items.getItem]s.filter(i => i.itemName !== this.props.itemName) 
+        items.setItemsSelected = [...items.getItems].filter(i => i.itemName !== this.props.itemName) 
         this.setState({checked: false})
     }
     // accessible from Checkout Component

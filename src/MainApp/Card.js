@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 const Card = props => {
-
     const { navigate } = props.navigation;
-    const {name, area, status, rating, phone, menu } = props.info;
+    const {name, area, status, rating, phone } = props.info;
     const arr = new Array(rating).fill(
             <Image style={styles.star} 
                    source={require('./icons/greenstar.png')} />
@@ -13,7 +12,20 @@ const Card = props => {
 
     return(
         <TouchableOpacity style = {styles.main}
-            onPress={() => navigate('Details', {info: props.info})}>
+            onPress={() => {
+                fetch('http://192.168.0.11:8080/getItems', {
+                    method: 'POST', 
+                    body: JSON.stringify({name: name}),
+                    headers:{'Content-Type': 'application/json'}
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // add key menu to props.info object
+                    props.info.menu = data
+                    navigate('Details', {info: props.info})
+                })
+                .catch(err => alert(err))
+            }}>
 
             <View style={styles.thumbnail_wrapper}>
                 <Image style = {styles.thumbnail}
@@ -46,7 +58,7 @@ const Card = props => {
 
         </TouchableOpacity>
     );
-};
+};}
 
 const styles = StyleSheet.create({
     main:{

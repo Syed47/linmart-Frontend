@@ -32,17 +32,6 @@ class CheckOut extends React.Component{
 		))
 	}
 
-	
-	// renderItemsSelected = () => (this.state.items.map(item => (			
-	// 		<ListItem itemName = {item.itemName} 
-	// 				itemPrice = {item.itemPrice}
-	// 				cross = {true}
-	// 				area = {item.area}
-	// 				refresh = {this.refresh.bind(this)}/> 		
-	// 	))
-	// )
-
-
 	render(){
 
 		const date = new Date().toString().substring(4,15);
