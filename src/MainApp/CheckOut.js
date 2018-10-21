@@ -23,7 +23,8 @@ class CheckOut extends React.Component{
 
 	renderItemsSelected() {
 		return(this.state.items.map(item => {
-			return(<ListItem itemName = {item.itemName} 
+			return(<ListItem shopName = {item.shopName}
+							itemName = {item.itemName} 
 							itemPrice = {item.itemPrice}
 							cross = {true}
 							area = {item.area}
@@ -32,10 +33,25 @@ class CheckOut extends React.Component{
 		))
 	}
 
+	async checkOutItems() {
+		const items = this.state.items;
+		const response = await fetch('http://192.168.0.11:3000/checkout', {
+	        method: 'POST', 
+	        body: JSON.stringify({items: items}),
+	        headers:{'Content-Type': 'application/json'}
+	    });
+	    
+	    if(response.ok){
+	    	const data = await response.json()
+	    	alert(JSON.stringify(data))
+	    }
+
+	}
+
 	render(){
 
 		const date = new Date().toString().substring(4,15);
-		const time = new Date().toString().substring(15,24);
+		const time = new Date().toString().substring(15,21);
 
 		return(
 			<View style = {styles.main}>
@@ -44,11 +60,8 @@ class CheckOut extends React.Component{
 						Please confirm!
 					</Text>
 	                <TouchableOpacity style={styles.buttonShape}
-                        onPress={() => { 
-							alert(
-								JSON.stringify(this.state.items.map(item => item.itemName)) + 
-								JSON.stringify(items.getItems.map(item => item.itemName)) 
-							)
+                        onPress={async () => { 
+								this.checkOutItems()
                          }}>
                         <Text style={{fontSize: 18,color: 'white'}}>Confirm</Text>
                         <Image source = {require('./icons/confirm.png')}/>

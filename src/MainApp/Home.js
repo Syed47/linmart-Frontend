@@ -10,7 +10,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            url: 'http://192.168.0.11:8080/getMembers', // get from the browser sidebar in expo tab
+            url: 'http://192.168.0.11:3000/getMembers', // get from the browser sidebar in expo tab
             passedInfo: [],
         }
         

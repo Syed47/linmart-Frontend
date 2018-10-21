@@ -14,7 +14,7 @@ const Card = props => {
         <TouchableOpacity style = {styles.main}
             onPress={ async () => {
                 if (props.nav) { // validate navigation
-                    const response = await fetch('http://192.168.0.11:8080/getItems', {
+                    const response = await fetch('http://192.168.0.11:3000/getItems', {
                         method: 'POST', 
                         body: JSON.stringify({name: name}),
                         headers:{'Content-Type': 'application/json'}
@@ -25,8 +25,11 @@ const Card = props => {
                         if(response.status === 200 && status === 'open') {
                             props.info.menu = data
                             data.length === 0 ? alert(`Sorry! ${name} have no items for sale!`) : null
+                        } else if (status === 'close'){
+                            alert(`Sorry! ${name} is close at the moment!`)
+                            props.info.menu = []// assign blank array to avoid errors further in the app
                         } else {
-                            alert(`Sorry! ${name} either close, or not providing the service..`)
+                            alert(`Sorry! ${name} is not providing the service. You may call them for any help.`)
                             props.info.menu = []// assign blank array to avoid errors further in the app
                         }
                         navigate('Details', {info: props.info});

@@ -18,6 +18,7 @@ class ListItem extends React.Component{
     // accessible from MemberDetails Component
     addToBasket() {
         items.addItem({ 
+            shopName: this.props.shopName, // this need to be primary key in the DB
             itemName: this.props.itemName, 
             itemPrice: this.props.itemPrice, 
             area: this.props.area
@@ -27,12 +28,12 @@ class ListItem extends React.Component{
 
     // accessible from MemberDetails Component
     cancelAddToBasket() {
-        items.setItemsSelected = [...items.getItems].filter(i => i.itemName !== this.props.itemName) 
+        items.setItemsSelected = items.getItems.filter(i => i.itemName !== this.props.itemName) 
         this.setState({checked: false})
     }
     // accessible from Checkout Component
     throughBackFromTheBasket() { 
-        items.setItemsSelected = [...items.getItems].filter(i => i.itemName !== this.props.itemName)
+        items.setItemsSelected = items.getItems.filter(i => i.itemName !== this.props.itemName)
         this.props.refresh()
     }
 
@@ -56,17 +57,22 @@ class ListItem extends React.Component{
                             this.checkCross(select, this.addToBasket.bind(this)))
     }
     render(){
-
         return(
             <TouchableOpacity style = {styles.food_wrapper} >
                 <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
                     <View style={styles.foodname}>
                         <Text style = {{color: 'white',fontSize: 24}}>{this.props.itemName}</Text>
+                        {/* this will render the source of the item only when the listItem gets render in Checkout.js*/}
+                        {this.props.cross ? (<Text style = {{color: 'white',fontSize: 12}}>
+                                                    {this.props.shopName}
+                                                </Text>) : null}
                     </View>
                     <View style={styles.foodprice}>
                         <Text style = {{color: 'white',fontSize: 22, paddingRight: 4}}>£: {this.props.itemPrice}</Text>
-                        {this.props.checkbox ? this.checkbox()  : null}
-                        {this.props.cross ? this.crossBox()  : null}
+                        <View style = {{marginBottom: '4%'}}>
+                            {this.props.checkbox ? this.checkbox()  : null}
+                            {this.props.cross ? this.crossBox()  : null}
+                        </View>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -89,7 +95,7 @@ const styles = StyleSheet.create({
     },
     foodname:{
         flex: 2,
-        flexDirection :'row',
+        flexDirection :'column',
     },
     foodprice:{
         flex: 1,

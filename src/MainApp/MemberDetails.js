@@ -35,7 +35,8 @@ class MemberDetails extends React.Component {
                     <FlatList
                         data={this.passedDetails.menu}
                         renderItem = {
-                            ({item})=> <ListItem  itemName = {item.name} 
+                            ({item})=> <ListItem shopName = {this.passedDetails.name}
+                                            itemName = {item.name} 
                                             itemPrice = {item.price} 
                                             checkbox = {true}
                                             area = {this.passedDetails.area}/>
