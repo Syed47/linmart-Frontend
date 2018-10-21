@@ -4,6 +4,8 @@ import select from './icons/select.png';
 import selected from './icons/selected.png';
 import items from './items'
 import cross from './icons/cross.png';
+
+
 class ListItem extends React.Component{
 
     constructor(props) {
@@ -35,22 +37,24 @@ class ListItem extends React.Component{
     }
 
     // BoilerPlate Function : this function returns a wrapper for images inside a listitem
-    checkCross = (image, action) => (
+    checkCross(image, action){
+        return(
             <TouchableOpacity style = {{borderColor: 'red'}} 
                 onPress = {()=> action()}>
                 <Image source = {image}/>
             </TouchableOpacity>
-    );
-
+        );
+    }
     // can only be seen in Checkout Component
-    crossBox = () => this.checkCross(cross, this.throughBackFromTheBasket.bind(this));  
-
+    crossBox(){
+       return this.checkCross(cross, this.throughBackFromTheBasket.bind(this));  
+    }
     // can only be seen in MemberDetails Component
-    checkbox = () => ( // checked -> is controlled from inside this function to change images
-        this.state.checked ? this.checkCross(selected, this.cancelAddToBasket.bind(this)) :
-                        this.checkCross(select, this.addToBasket.bind(this))
-    )
-
+    checkbox() {
+        // checked -> is controlled from inside this function to change images
+        return (this.state.checked ? this.checkCross(selected, this.cancelAddToBasket.bind(this)) :
+                            this.checkCross(select, this.addToBasket.bind(this)))
+    }
     render(){
 
         return(

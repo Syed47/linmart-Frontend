@@ -12,19 +12,28 @@ const Card = props => {
 
     return(
         <TouchableOpacity style = {styles.main}
-            onPress={() => {
-                fetch('http://192.168.0.11:8080/getItems', {
-                    method: 'POST', 
-                    body: JSON.stringify({name: name}),
-                    headers:{'Content-Type': 'application/json'}
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // add key menu to props.info object
-                    props.info.menu = data
-                    navigate('Details', {info: props.info})
-                })
-                .catch(err => alert(err))
+            onPress={ async () => {
+                if (props.nav) { // validate navigation
+                    const response = await fetch('http://192.168.0.11:8080/getItems', {
+                        method: 'POST', 
+                        body: JSON.stringify({name: name}),
+                        headers:{'Content-Type': 'application/json'}
+                    });
+                    try {
+                        const data = await response.json();
+                        // data.status === 200 ? props.info.menu = data : props.info.menu = []
+                        if(response.status === 200 && status === 'open') {
+                            props.info.menu = data
+                            data.length === 0 ? alert(`Sorry! ${name} have no items for sale!`) : null
+                        } else {
+                            alert(`Sorry! ${name} either close, or not providing the service..`)
+                            props.info.menu = []// assign blank array to avoid errors further in the app
+                        }
+                        navigate('Details', {info: props.info});
+                    } catch(err) {
+                        alert(err)
+                    }
+                }
             }}>
 
             <View style={styles.thumbnail_wrapper}>
@@ -58,7 +67,7 @@ const Card = props => {
 
         </TouchableOpacity>
     );
-};}
+};
 
 const styles = StyleSheet.create({
     main:{

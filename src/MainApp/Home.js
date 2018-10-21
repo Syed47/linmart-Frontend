@@ -25,7 +25,7 @@ class Home extends React.Component {
     }
 
     // Render each member to the data received
-    renderMembers = members => members.map((members, index) => <Card info={members} key = {index}/>);
+    renderMembers = members => members.map((members, index) => <Card info={members} key = {index} nav = {true}/>);
 
     render = () => { return (
         <View style={styles.main}>
