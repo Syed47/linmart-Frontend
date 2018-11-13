@@ -1,7 +1,7 @@
 
-import React, {Component} from 'react';
+// import React, {Component} from 'react';
 
-export default itemsList = {
+const items  = {
     __itemsSelected: [], // stays private
     get getItems() {
         return this.__itemsSelected
@@ -13,3 +13,5 @@ export default itemsList = {
         this.__itemsSelected = [...list]
     }
 }
+
+module.exports = {items}

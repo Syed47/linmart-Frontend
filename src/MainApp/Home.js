@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView,TouchableOpacity,Dimensions } from 'react-native';
+import { View, Text, StyleSheet,Image, ScrollView,TouchableOpacity,Dimensions } from 'react-native';
 
 import Header from  './Header';
-import SearchFilter from './SearchFilter';
 import Card from './Card';
 
 class Home extends React.Component {
@@ -11,35 +10,77 @@ class Home extends React.Component {
         super(props);
         this.state = {
             url: 'http://192.168.0.11:3000/getMembers', // get from the browser sidebar in expo tab
-            passedInfo: [],
+            passedInfo: [], // only stores the original data that comes from the server
+            members: [] // this is the altered data
         }
-        
         this.fetchData()
     }
+
     // Request to the server to get members data
     fetchData() {
         fetch(this.state.url)
             .then(res => res.json())
-            .then(data => { this.setState({passedInfo : data.members })})
+            .then(data => { 
+                this.setState({ passedInfo : data.members }, () => {
+                    this.setState({members: this.state.passedInfo})
+                });
+            })
             .catch(err => alert(err)) 
     }
 
     // Render each member to the data received
-    renderMembers = members => members.map((members, index) => <Card info={members} key = {index} nav = {true}/>);
+    renderMembers(members){
+        const cards = members.map((members, index) => <Card info={members} key = {index} nav = {true}/>);
+        return cards;
+    } 
 
-    render = () => { return (
-        <View style={styles.main}>
-            <ScrollView contentContainerStyle={styles.scroll}>
-                <Header />
-                <SearchFilter />
-                {this.renderMembers(this.state.passedInfo)}
-            </ScrollView>
-        </View>
-    )} 
+    filterMembers(by) {
+        //@param : by -> need to be either 'shop' or 'res
+        if (by !== 'shop' && by !== 'restaurant')  return;
+        const filteredData = this.state.passedInfo.filter(({catagory}) => catagory === by);
+        this.setState({members: filteredData})
+    }
+
+    searchFilter() {
+
+        return (
+            <View style={styles.style_main}>
+                <View style={styles.wrapper}>
+
+                    <TouchableOpacity style={styles.button_shape}
+                        onPress={() => this.filterMembers('shop')}>
+                        <Text style={styles.text}>Super-Stores</Text>
+                        <Image source={require('./icons/supermarket.png')} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.button_shape}
+                        onPress={() => this.filterMembers('restaurant')}>
+                        <Text style={styles.text}>Restaurants</Text>
+                        <Image source={require('./icons/resturant.png')} />
+                    </TouchableOpacity>
+
+                </View>
+            </View>
+        );
+        
+    }
+
+    render() { 
+        return (
+            <View style={styles.main}>
+                <ScrollView contentContainerStyle={styles.scroll}>
+                    <Header />
+                    {this.searchFilter()}
+                    {this.renderMembers(this.state.members)}
+                </ScrollView>
+            </View>
+        )
+    } 
 }
 
 console.disableYellowBox = true
 const styles = StyleSheet.create({
+    // Home Styling
     main:{
         flex: 1,
         justifyContent: 'space-between',
@@ -50,6 +91,36 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         minWidth: '100%',
+    }, 
+    // searchFilter Styling
+    style_main: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        backgroundColor: 'rgba(165, 185, 255, 0.95)', //'rgba(252, 128, 128,0.8)',
+        maxHeight: 55,
+        padding: 2,
+    },
+    wrapper:{
+        flex: 1,    
+        flexDirection: 'row',
+    },
+    button_shape:{
+        flex: 1,
+        flexDirection: 'row',
+        borderRadius: 360,
+        backgroundColor: 'rgba(255, 114, 114,0.9)',//'rgba(255, 50, 200, 0.5)
+        alignItems: 'center', 
+        justifyContent: 'space-around',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        marginHorizontal: 3,
+    },
+    text:{
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: 'white',
+        paddingRight: 5
     }
 });
 

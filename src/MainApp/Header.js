@@ -1,33 +1,79 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput,Image,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput,Image,TouchableOpacity,ScrollView } from 'react-native';
 import { withNavigation } from 'react-navigation';
-
-import SettingsIcon from './icons/settings.png';
 
 class Header extends React.Component {
 
     constructor(){
         super();
         this.state = {
-            location: "default location value"
+            location: '',
+            suggestions: []
         }
     }
 
-    render() {
-        return (
-            <View style={styles.main}>
-                <TextInput
-                    style={styles.textfield}
-                    placeholder = 'Location'
-                    onChangeText={(location)=> {this.setState({location})}}/>
+    async getSuggestions() {
+        const response = await fetch('http://192.168.0.11:3000/getLocationsSuggestions', {
+            method: 'POST', 
+            body: JSON.stringify({location: this.state.location}),
+            headers:{'Content-Type': 'application/json'}
+        });
+        try {
+            const data = await response.json();
+            this.setState({suggestions: data})
+            alert("requesting")
+        } catch(err) {
+            alert(err)
+        }
+    }
 
-                <TouchableOpacity style= {styles.settings}
-                    onPress = {()=> {this.props.navigation.navigate('CheckOut')}}
-                >
-                    <Image style = {styles.image} 
-                        source={require('./icons/basket.png')}
-                    />
-                </TouchableOpacity>
+    renderSuggestion() {
+        return(
+           <ScrollView contentContainerStyle={{width: '100%'}}>
+
+                {this.state.suggestions.map(location => (
+                    <TouchableOpacity style = {styles.listItem}
+                        onPress = {()=> this.setState({location})}>
+
+                        <Text style = {{fontStyle: 'italic', fontSize: 16}}>
+                            {location}
+                        </Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        );
+    }
+
+    render() {
+ 
+        const { location, suggestions } = this.state;
+
+        return (
+            <View style = {{flex:1,justifyContent: 'space-between', width: '100%'}}>
+                <View style={styles.navBar}>
+                    <TextInput
+                        style={styles.textfield}
+                        placeholder = 'Location'
+                        defaultValue = {location}
+                        onChangeText = {async (input)=> {
+                            if (input.length > 1) {
+                                this.setState({location: input}, ()=>{
+                                    suggestions.length === 0 ? this.getSuggestions(): null;
+                                });       
+                            } else {this.setState({suggestions: []})}
+                        }}/>
+
+                    <TouchableOpacity style= {styles.settings}
+                        onPress = {()=> {this.props.navigation.navigate('CheckOut')}}>
+
+                        <Image style = {styles.image} 
+                            source={require('./icons/basket.png')}/>
+
+                    </TouchableOpacity>
+                </View>
+                <View style = {{flex: 1}}>
+                    {location !== '' ? this.renderSuggestion() : null}                
+                </View>
             </View>
         );
     }
@@ -35,7 +81,7 @@ class Header extends React.Component {
 
 
 const styles = StyleSheet.create({
-    main: {
+    navBar: {
         flex: 1,
         flexDirection: 'row',        
         justifyContent: 'space-between',
@@ -57,8 +103,16 @@ const styles = StyleSheet.create({
     image:{
         width: 40,
         height: 40,
+    },
+    listItem: {
+        alignItems: 'center',
+        paddingVertical: 2,
+        borderBottomColor: 'rgba(255, 114, 114,0.9)',
+        borderBottomWidth: 1,        
+        backgroundColor: 'rgba(165, 185, 255, 0.95)',
     }
 });
 
 
 export default withNavigation(Header);
+

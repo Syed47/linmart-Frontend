@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet,TouchableOpacity,Image,ScrollView } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import ListItem from './ListItem';
-import items from './items';
+import {items} from './bridge';
 
 class CheckOut extends React.Component{
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,Dimensions,Image } from 'react-native';
 import select from './icons/select.png';
 import selected from './icons/selected.png';
-import items from './items'
+import {items} from './bridge'
 import cross from './icons/cross.png';
 
 

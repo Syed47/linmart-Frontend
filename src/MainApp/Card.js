@@ -56,9 +56,12 @@ const Card = props => {
                     <Text style={styles.area}>
                         {area}
                     </Text>
-                    <Text style={styles.status}>
-                        {status}
-                    </Text>
+                    {
+                        status === 'open' ? 
+                            <Text style={{fontSize: 18, margin: 5,color:'lime'}}>{status}</Text> 
+                            : <Text style={{fontSize: 18, margin: 5,color:'red'}}>{status}</Text>
+                    }
+ 
                 </View>
 
                 <View style={styles.rating_wrapper}>
@@ -146,11 +149,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'rgba(94, 153, 255,1)',
     },
-    status:{
-        fontSize: 18,
-        color: 'rgba(32, 219, 104,1)' ,
-        margin:5,
-    },
+    // status:{ still usable if needed
+    //     fontSize: 18,
+    //     //color: 'lime',//'rgba(32, 219, 104,1)' ,
+    //     margin:5,
+    // },
     area: {
         fontSize: 18,
         color: 'rgba(159, 104, 255, 1)',
