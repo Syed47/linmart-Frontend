@@ -9,7 +9,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            url: 'http://192.168.0.11:3000/getMembers', // get from the browser sidebar in expo tab
+            url: 'http://192.168.0.11:4000/getMembers', // get from the browser sidebar in expo tab
             passedInfo: [], // only stores the original data that comes from the server
             members: [] // this is the altered data
         }
@@ -28,21 +28,24 @@ class Home extends React.Component {
             .catch(err => alert(err)) 
     }
 
-    // Render each member to the data received
+    // Render each member from the data received
     renderMembers(members){
-        const cards = members.map((members, index) => <Card info={members} key = {index} nav = {true}/>);
+        const cards = members.map((member, index) => {
+            return (<Card info={member} 
+                          key = {index} 
+                          nav = {true}/>)
+        });
         return cards;
     } 
 
     filterMembers(by) {
-        //@param : by -> need to be either 'shop' or 'res
+        //@param : by -> needs to be either 'shop' or 'res
         if (by !== 'shop' && by !== 'restaurant')  return;
         const filteredData = this.state.passedInfo.filter(({catagory}) => catagory === by);
         this.setState({members: filteredData})
     }
 
     searchFilter() {
-
         return (
             <View style={styles.style_main}>
                 <View style={styles.wrapper}>
@@ -61,8 +64,7 @@ class Home extends React.Component {
 
                 </View>
             </View>
-        );
-        
+        )   
     }
 
     render() { 

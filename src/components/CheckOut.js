@@ -2,30 +2,31 @@ import React from 'react';
 import { View, Text, StyleSheet,TouchableOpacity,Image,ScrollView } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import ListItem from './ListItem';
-import {items} from './bridge';
+import {itemStore, user_data_from_server } from './util';
 
 class CheckOut extends React.Component{
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			items: items.getItems,
-			totalPrice: items.getItems.reduce((total, item) => total += item.itemPrice, 0)
+			items: itemStore.getItems,
+			totalPrice: itemStore.getItems.reduce((total, item) => total += item.itemprice, 0)
 		}		
 	}
 
+	// re-rendering after removing or adding item
 	refresh() {
 		this.setState({
-			items: items.getItems,
-			totalPrice: items.getItems.reduce((total, item) => total += item.itemPrice, 0)
+			items: itemStore.getItems,
+			totalPrice: itemStore.getItems.reduce((total, item) => total += item.itemprice, 0)
 		})
 	}
 
 	renderItemsSelected() {
 		return(this.state.items.map(item => {
-			return(<ListItem shopName = {item.shopName}
-							itemName = {item.itemName} 
-							itemPrice = {item.itemPrice}
+			return(<ListItem shopname = {item.shopname}
+							itemname = {item.itemname} 
+							itemprice = {item.itemprice}
 							cross = {true}
 							area = {item.area}
 							refresh = {this.refresh.bind(this)}/> 	
@@ -35,15 +36,22 @@ class CheckOut extends React.Component{
 
 	async checkOutItems() {
 		const items = this.state.items;
-		const response = await fetch('http://192.168.0.11:3000/checkout', {
+		const userid = user_data_from_server.userid;
+
+		const request = await fetch('http://192.168.0.11:4000/checkout', {
 	        method: 'POST', 
-	        body: JSON.stringify({items: items}),
+	        body: JSON.stringify({items: items, userid: userid}),
 	        headers:{'Content-Type': 'application/json'}
 	    });
 	    
-	    if(response.ok){
-	    	const data = await response.json()
-	    	alert(JSON.stringify(data))
+	    // check to see if the request is sent
+	    if(request.ok){
+	    	const data = await request.json()
+	    	if (data.response) {
+	    		this.setState({ items: [], totalPrice: 0 }, function() {
+	    			alert(itemStore.flush());	
+	    		})
+	    	}
 	    }
 
 	}

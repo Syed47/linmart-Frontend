@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,Dimensions,Image } from 'react-native';
 import select from './icons/select.png';
 import selected from './icons/selected.png';
-import {items} from './bridge'
+import { itemStore } from './util'
 import cross from './icons/cross.png';
 
 
@@ -15,25 +15,26 @@ class ListItem extends React.Component{
         }
     }
     
-    // accessible from MemberDetails Component
+    // accessible from Stack Component
     addToBasket() {
-        items.addItem({ 
-            shopName: this.props.shopName, // this need to be primary key in the DB
-            itemName: this.props.itemName, 
-            itemPrice: this.props.itemPrice, 
+        itemStore.addItem({ 
+            memberid: this.props.memberid,
+            shopname: this.props.shopname, 
+            itemname: this.props.itemname, 
+            itemprice: this.props.itemprice, 
             area: this.props.area
         })
         this.setState({checked: true}) 
     }
 
-    // accessible from MemberDetails Component
+    // accessible from Stack Component
     cancelAddToBasket() {
-        items.setItemsSelected = items.getItems.filter(i => i.itemName !== this.props.itemName) 
+        itemStore.setItemsSelected = itemStore.getItems.filter(i => i.itemname !== this.props.itemname) 
         this.setState({checked: false})
     }
     // accessible from Checkout Component
     throughBackFromTheBasket() { 
-        items.setItemsSelected = items.getItems.filter(i => i.itemName !== this.props.itemName)
+        itemStore.setItemsSelected = itemStore.getItems.filter(i => i.itemname !== this.props.itemname)
         this.props.refresh()
     }
 
@@ -50,7 +51,7 @@ class ListItem extends React.Component{
     crossBox(){
        return this.checkCross(cross, this.throughBackFromTheBasket.bind(this));  
     }
-    // can only be seen in MemberDetails Component
+    // can only be seen in Stack Component
     checkbox() {
         // checked -> is controlled from inside this function to change images
         return (this.state.checked ? this.checkCross(selected, this.cancelAddToBasket.bind(this)) :
@@ -61,14 +62,18 @@ class ListItem extends React.Component{
             <TouchableOpacity style = {styles.food_wrapper} >
                 <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
                     <View style={styles.foodname}>
-                        <Text style = {{color: 'white',fontSize: 24}}>{this.props.itemName}</Text>
+                        <Text style = {{color: 'white',fontSize: 24}}>
+                            {this.props.itemname}
+                        </Text>
                         {/* this will render the source of the item only when the listItem gets render in Checkout.js*/}
                         {this.props.cross ? (<Text style = {{color: 'white',fontSize: 12}}>
-                                                    {this.props.shopName}
+                                                    {this.props.shopname}
                                                 </Text>) : null}
                     </View>
                     <View style={styles.foodprice}>
-                        <Text style = {{color: 'white',fontSize: 22, paddingRight: 4}}>£: {this.props.itemPrice}</Text>
+                        <Text style = {{color: 'white',fontSize: 22, paddingRight: 4}}>
+                            £ {this.props.itemprice}
+                        </Text>
                         <View style = {{marginBottom: '4%'}}>
                             {this.props.checkbox ? this.checkbox()  : null}
                             {this.props.cross ? this.crossBox()  : null}

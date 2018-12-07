@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Home from './src/MainApp/Home';
+import Home from './src/components/Home';
 import {ScreenSwitcher} from './src/routers/router';
 
 export default class App extends React.Component {

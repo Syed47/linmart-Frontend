@@ -4,7 +4,9 @@ import { withNavigation } from 'react-navigation';
 
 const Card = props => {
     const { navigate } = props.navigation;
-    const {name, area, status, rating, phone } = props.info;
+
+    // id is the memberid (om server)of the member in the database
+    const {id, membername, area, status, rating, phone } = props.info;
     const arr = new Array(rating).fill(
             <Image style={styles.star} 
                    source={require('./icons/greenstar.png')} />
@@ -14,9 +16,12 @@ const Card = props => {
         <TouchableOpacity style = {styles.main}
             onPress={ async () => {
                 if (props.nav) { // validate navigation
-                    const response = await fetch('http://192.168.0.11:3000/getItems', {
+                    const response = await fetch('http://192.168.0.11:4000/getItems', {
                         method: 'POST', 
-                        body: JSON.stringify({name: name}),
+                        body: JSON.stringify({
+                            // membername: membername,
+                            // area: area
+                        }),
                         headers:{'Content-Type': 'application/json'}
                     });
                     try {
@@ -24,15 +29,15 @@ const Card = props => {
                         // data.status === 200 ? props.info.menu = data : props.info.menu = []
                         if(response.status === 200 && status === 'open') {
                             props.info.menu = data
-                            data.length === 0 ? alert(`Sorry! ${name} have no items for sale!`) : null
+                            data.length === 0 ? alert(`Sorry! ${membername} have no items for sale!`) : null
                         } else if (status === 'close'){
-                            alert(`Sorry! ${name} is close at the moment!`)
+                            alert(`Sorry! ${membername} is close at the moment!`)
                             props.info.menu = []// assign blank array to avoid errors further in the app
                         } else {
-                            alert(`Sorry! ${name} is not providing the service. You may call them for any help.`)
+                            alert(`Sorry! ${membername} is not providing the service. You may call them for any help.`)
                             props.info.menu = []// assign blank array to avoid errors further in the app
                         }
-                        navigate('Details', {info: props.info});
+                        navigate('Stack', {info: props.info});
                     } catch(err) {
                         alert(err)
                     }
@@ -48,7 +53,7 @@ const Card = props => {
 
                 <View style={styles.name_wrapper}>
                     <Text style={styles.name}>
-                        {name}
+                        {membername}
                     </Text>
                 </View>
 

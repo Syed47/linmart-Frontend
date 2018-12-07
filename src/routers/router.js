@@ -1,15 +1,25 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 
-import Home from '../MainApp/Home';
-import MemberDetails from '../MainApp/MemberDetails';
+import Home from '../components/Home';
+import Stack from '../components/Stack';
 import SignIn from '../User/SignIn';
-import CheckOut from '../MainApp/CheckOut';
+import SignUp from '../User/SignUp';
+import CheckOut from '../components/CheckOut';
 
 export const ScreenSwitcher = createStackNavigator({
 
     // SignIn:{
     //     screen: SignIn,
+    //     navigationOptions: {
+    //         title: 'login',
+    //     },
+    // },
+    // SignUp: {
+    //     screen: SignUp,
+    //     navigationOptions: {
+    //         title: 'SignUp',
+    //     },
     // },
     Home: {
         screen: Home,
@@ -17,9 +27,8 @@ export const ScreenSwitcher = createStackNavigator({
             title: 'linmart',
         },
     },
-
-    Details: {
-        screen: MemberDetails,
+    Stack: {
+        screen: Stack,
         navigationOptions: {
             title: `linamrt`,
         },
@@ -33,7 +42,7 @@ export const ScreenSwitcher = createStackNavigator({
 },
     {
         mode: 'card',// modal, card
-        headerMode: 'screen', // float,screen, none
+        headerMode: 'float', // float,screen, none
     }
 );
 

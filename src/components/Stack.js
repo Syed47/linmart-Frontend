@@ -4,7 +4,7 @@ import { withNavigation } from 'react-navigation';
 import Card from './Card';
 import ListItem from './ListItem';
 
-class MemberDetails extends React.Component {
+class Stack extends React.Component {
 
     constructor(props) {
         super(props);
@@ -35,9 +35,10 @@ class MemberDetails extends React.Component {
                     <FlatList
                         data={this.passedDetails.menu}
                         renderItem = {
-                            ({item})=> <ListItem shopName = {this.passedDetails.name}
-                                            itemName = {item.name} 
-                                            itemPrice = {item.price} 
+                            ({item})=> <ListItem memberid = {this.passedDetails.id}
+                                            shopname = {this.passedDetails.membername}
+                                            itemname = {item.itemname} 
+                                            itemprice = {item.price} 
                                             checkbox = {true}
                                             area = {this.passedDetails.area}/>
                         }
@@ -104,4 +105,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default withNavigation(MemberDetails);
+export default withNavigation(Stack);

@@ -13,7 +13,7 @@ class Header extends React.Component {
     }
 
     async getSuggestions() {
-        const response = await fetch('http://192.168.0.11:3000/getLocationsSuggestions', {
+        const response = await fetch('http://192.168.0.11:4000/getLocationsSuggestions', {
             method: 'POST', 
             body: JSON.stringify({location: this.state.location}),
             headers:{'Content-Type': 'application/json'}
@@ -21,7 +21,7 @@ class Header extends React.Component {
         try {
             const data = await response.json();
             this.setState({suggestions: data})
-            alert("requesting")
+            // alert("requesting")
         } catch(err) {
             alert(err)
         }
@@ -55,16 +55,23 @@ class Header extends React.Component {
                         style={styles.textfield}
                         placeholder = 'Location'
                         defaultValue = {location}
+                        returnKeyType="next"
                         onChangeText = {async (input)=> {
                             if (input.length > 1) {
                                 this.setState({location: input}, ()=>{
                                     suggestions.length === 0 ? this.getSuggestions(): null;
                                 });       
                             } else {this.setState({suggestions: []})}
-                        }}/>
+                        }}
+                        onSubmitEditing = {() => {
+                            
+                        }}
+                    />
 
                     <TouchableOpacity style= {styles.settings}
-                        onPress = {()=> {this.props.navigation.navigate('CheckOut')}}>
+                        onPress = {()=> {
+                            this.props.navigation.navigate('CheckOut')
+                        }}>
 
                         <Image style = {styles.image} 
                             source={require('./icons/basket.png')}/>
