@@ -1,11 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet,Image, ScrollView,TouchableOpacity,Dimensions } from 'react-native';
+import { 
+        View, 
+        Text, 
+        StyleSheet,
+        Image, 
+        ScrollView,
+        TouchableOpacity,
+        Dimensions 
+    } from 'react-native';
 
 import Header from  './Header';
 import Card from './Card';
 
 class Home extends React.Component {
-    
     constructor(props) {
         super(props);
         this.state = {
@@ -13,6 +20,9 @@ class Home extends React.Component {
             passedInfo: [], // only stores the original data that comes from the server
             members: [] // this is the altered data
         }
+
+        this.filterByLocation = this.filterByLocation.bind(this)
+
         this.fetchData()
     }
 
@@ -23,6 +33,7 @@ class Home extends React.Component {
             .then(data => { 
                 this.setState({ passedInfo : data.members }, () => {
                     this.setState({members: this.state.passedInfo})
+                    members_data = this.state.passedInfo;
                 });
             })
             .catch(err => alert(err)) 
@@ -31,18 +42,32 @@ class Home extends React.Component {
     // Render each member from the data received
     renderMembers(members){
         const cards = members.map((member, index) => {
-            return (<Card info={member} 
-                          key = {index} 
-                          nav = {true}/>)
+            return ( <Card info={member} key = {index} nav = {true}/> )
         });
         return cards;
     } 
 
-    filterMembers(by) {
-        //@param : by -> needs to be either 'shop' or 'res
-        if (by !== 'shop' && by !== 'restaurant')  return;
-        const filteredData = this.state.passedInfo.filter(({catagory}) => catagory === by);
-        this.setState({members: filteredData})
+
+    filterData(callback) {
+        const filteredData = this.state.passedInfo.filter(callback);
+        this.setState({members: filteredData})    
+    }
+
+
+    filterBycatagory(ctg) {
+        //@param : by -> needs to be either 'shop' or 'res'
+        if (ctg !== 'shop' && ctg !== 'restaurant')  return;
+        this.filterData(item => item.catagory === ctg)
+        // const filteredData = this.state.passedInfo.filter(({catagory}) => catagory === by);
+        // this.setState({members: filteredData})
+    }
+
+    filterByLocation(loc) {
+        if (loc) {
+            this.filterData(item => item.area === loc);
+        } else {
+            this.setState({ members: this.state.passedInfo})
+        }
     }
 
     searchFilter() {
@@ -51,13 +76,13 @@ class Home extends React.Component {
                 <View style={styles.wrapper}>
 
                     <TouchableOpacity style={styles.button_shape}
-                        onPress={() => this.filterMembers('shop')}>
+                        onPress={() => this.filterBycatagory('shop')}>
                         <Text style={styles.text}>Super-Stores</Text>
                         <Image source={require('./icons/supermarket.png')} />
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.button_shape}
-                        onPress={() => this.filterMembers('restaurant')}>
+                        onPress={() => this.filterBycatagory('restaurant')}>
                         <Text style={styles.text}>Restaurants</Text>
                         <Image source={require('./icons/resturant.png')} />
                     </TouchableOpacity>
@@ -71,7 +96,7 @@ class Home extends React.Component {
         return (
             <View style={styles.main}>
                 <ScrollView contentContainerStyle={styles.scroll}>
-                    <Header />
+                    <Header location = {this.filterByLocation}/>
                     {this.searchFilter()}
                     {this.renderMembers(this.state.members)}
                 </ScrollView>
@@ -110,7 +135,7 @@ const styles = StyleSheet.create({
     button_shape:{
         flex: 1,
         flexDirection: 'row',
-        borderRadius: 360,
+        borderRadius: 30,
         backgroundColor: 'rgba(255, 114, 114,0.9)',//'rgba(255, 50, 200, 0.5)
         alignItems: 'center', 
         justifyContent: 'space-around',

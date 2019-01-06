@@ -30,8 +30,6 @@ class SignUp extends React.Component {
 		}
 	}
 
-
-
 	signUp() {
 
 		const { username, email, address, password, confirmPassword } = this.state;
@@ -102,7 +100,7 @@ class SignUp extends React.Component {
                         returnKeyType="next"
                         onSubmitEditing = {() => {
                             // look for a strict email regex
-                            if (match(this.state.email, /[a-zA-Z0-9._-]+@[a-zA-Z]+\.(com|org|edu|ac\.[a-z])/)) {
+                            if (match(this.state.email, /[a-zA-Z0-9._-]+@[a-zA-Z]+\.(com|ac\.[a-z])/)) {
                                 Keyboard.dismiss();
                                 return;
                             }
@@ -116,7 +114,7 @@ class SignUp extends React.Component {
 						onChangeText = {(address) => this.setState({address})}	
                         returnKeyType="next"
                         onSubmitEditing = {() => {
-                            if (match(this.state.address, /[a-zA-Z0-9\.]+/)) {
+                            if (match(this.state.address, /[a-zA-Z0-9\.]+\s?/)) {
                                 Keyboard.dismiss();
                                 return;
                             }
@@ -126,6 +124,7 @@ class SignUp extends React.Component {
 					<TextInput
 						style = {styles.txtfield}
 						placeholder = {'Password'}
+                        secureTextEntry={true}
 						onChangeText = {(password) => this.setState({password})}
                         returnKeyType="next"
                         onSubmitEditing = {() => {
@@ -139,6 +138,7 @@ class SignUp extends React.Component {
 					<TextInput
 						style = {styles.txtfield}
 						placeholder = {'Confirm Password'}
+                        secureTextEntry={true}
 						onChangeText = {(confirmPassword) => this.setState({confirmPassword})}	
                         returnKeyType="done"
                         onSubmitEditing = {() => {
@@ -248,21 +248,3 @@ const styles = StyleSheet.create({
 })
 
 export default withNavigation(SignUp);
-/*
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 28,
-        color: 'white',
-        minWidth: '90%',
-        maxWidth: '90%',
-        color: 'rgba(249, 129, 37, 1)',
-        fontStyle: 'italic',
-        marginVertical: '7%',
-        paddingHorizontal: '2%',
-        // borderWidth: 1,
-        // borderColor: 'rgba(249, 129, 37, 1)',
-        borderRadius: 10,
-        backgroundColor: 'white'//'rgba(249, 129, 37, 1)'
-
-*/

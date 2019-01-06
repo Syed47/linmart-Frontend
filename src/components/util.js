@@ -17,6 +17,8 @@ const itemStore  = {
     }
 }
 
+// store the data of current user
+// the data has links to the DB
 const user_data_from_server = {
     userid: 22
 } 
@@ -35,31 +37,30 @@ function match(value, pattern) {
 
             the return value can also be treated as a boolean,i.e length > 0 = true, length  == 0 = false
         */
-        return (data && data[0] === data['input']) ? data[0] : false;
+        return (data && data[0] === data['input']) ? data[0] : undefined
     } catch(err) {
-        // do something about the error
+        console.log(err)
     }
 
 }
 
 
 const crypto = {
-
+    
     key: 'catchmeifyoucan', // vernom-cipher key
     // Private
     __HASH__: function(string, key) {
         const len = string.length
-        let XorAscii = undefined; 
-        let vernomChar = undefined;    
+        let XorAscii = undefined;
+        let vernomChar = undefined;
         let output = '';
 
         for (let i = 0; i < len; i++) {
-            //((msg[i]-'0')^(key[i]-'0')+'0') // find out on stackoverflow what does it do
-            // XorAscii = string.charCodeAt(i) ^ (key.charCodeAt(i))
-            XorAscii = (string.charCodeAt(i)-'0') ^ (key.charCodeAt(i)-'0')+'0'
-            // console.log(XorAscii) 
-            vernomChar = String.fromCharCode(XorAscii)
-            // console.log(vernomChar)
+            XorAscii = string.charCodeAt(i) ^ key.charCodeAt(i);
+            if (XorAscii <= 32) {
+                XorAscii += 32
+            }
+            vernomChar = String.fromCharCode(XorAscii) 
             output += vernomChar
         }
         return output
@@ -70,8 +71,36 @@ const crypto = {
     },
 
     decrypt: function(string) {
-        return this.__HASH__.call(this,string, this.key)
+        return this.__HASH__.call(this, string, this.key)
     }
 }
 
-module.exports = {itemStore, match,crypto, user_data_from_server}
+
+// A binary search algorithm
+// @arr: the list needed to be searched
+// @node: value required to be searched in the @arr
+function binary_search(arr, node) {
+    console.log(arr)
+    let l = 0;
+    let r = arr.length - 1
+
+    while (l <= r) {
+        let m = Math.floor((l + r) / 2)
+        if (arr[m] < node) {
+            l = m + 1
+        } else if (arr[m] > node) {
+            r = m - 1
+        } else {
+            return m
+        }
+    }
+    return 'not found'
+}
+
+module.exports = {
+    itemStore, 
+    match,
+    crypto, 
+    binary_search,
+    user_data_from_server
+}

@@ -24,7 +24,7 @@ class CheckOut extends React.Component{
 
 	renderItemsSelected() {
 		return(this.state.items.map(item => {
-			return(<ListItem shopname = {item.shopname}
+			return(<ListItem membername = {item.membername}
 							itemname = {item.itemname} 
 							itemprice = {item.itemprice}
 							cross = {true}
@@ -36,6 +36,7 @@ class CheckOut extends React.Component{
 
 	async checkOutItems() {
 		const items = this.state.items;
+		// alert(JSON.stringify(items))
 		const userid = user_data_from_server.userid;
 
 		const request = await fetch('http://192.168.0.11:4000/checkout', {
@@ -49,7 +50,7 @@ class CheckOut extends React.Component{
 	    	const data = await request.json()
 	    	if (data.response) {
 	    		this.setState({ items: [], totalPrice: 0 }, function() {
-	    			alert(itemStore.flush());	
+	    			alert(itemStore.flush() ? 'Done!' : 'Sorry try again!');	
 	    		})
 	    	}
 	    }

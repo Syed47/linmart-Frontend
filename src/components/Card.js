@@ -7,25 +7,27 @@ const Card = props => {
 
     // id is the memberid (om server)of the member in the database
     const {id, membername, area, status, rating, phone } = props.info;
-    const arr = new Array(rating).fill(
-            <Image style={styles.star} 
-                   source={require('./icons/greenstar.png')} />
-        )
+    const ratingIcon = <Image style={styles.star} 
+                         source={require('./icons/greenstar.png')} />
+
+    const arr = new Array(rating).fill(ratingIcon)
 
     return(
         <TouchableOpacity style = {styles.main}
             onPress={ async () => {
-                if (props.nav) { // validate navigation
+                if (props.nav) { // validate/allow navigation
                     const response = await fetch('http://192.168.0.11:4000/getItems', {
                         method: 'POST', 
                         body: JSON.stringify({
-                            // membername: membername,
-                            // area: area
+                            // memberid: id -> use this get member by id, remove the other 2
+                            membername: membername,
+                            area: area
                         }),
                         headers:{'Content-Type': 'application/json'}
                     });
                     try {
                         const data = await response.json();
+                        // alert(JSON.stringify(data))
                         // data.status === 200 ? props.info.menu = data : props.info.menu = []
                         if(response.status === 200 && status === 'open') {
                             props.info.menu = data

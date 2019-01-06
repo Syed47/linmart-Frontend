@@ -36,7 +36,8 @@ class Stack extends React.Component {
                         data={this.passedDetails.menu}
                         renderItem = {
                             ({item})=> <ListItem memberid = {this.passedDetails.id}
-                                            shopname = {this.passedDetails.membername}
+                                            membername = {this.passedDetails.membername}
+                                            itemid = {item.id}
                                             itemname = {item.itemname} 
                                             itemprice = {item.price} 
                                             checkbox = {true}
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     buttonShape:{
         flex: 1,
         flexDirection: 'row',
-        borderRadius: 90,
+        borderRadius: 30,
         backgroundColor: 'white',
         alignItems: 'center', 
         justifyContent: 'space-around',

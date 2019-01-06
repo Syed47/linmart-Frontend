@@ -12,7 +12,10 @@ import { withNavigation } from 'react-navigation';
 import street from '../Images/street.jpg';
 import cart from '../Images/cart.jpg';
 import logo from '../Images/logo.jpg';
-import { match, crypto, user_data_from_server } from '../components/util';
+import { match, 
+        crypto, 
+        user_data_from_server 
+    } from '../components/util';
 
 // to access native keys: event.nativeEvent.key
 
@@ -34,7 +37,6 @@ class SignIn extends React.Component{
         */
 
         const ePassword = crypto.encrypt(this.state.password)
-
         // alert(ePassword)
         
         fetch('http://192.168.0.11:4000/signin', {
@@ -67,9 +69,9 @@ class SignIn extends React.Component{
             
                 <View style={styles.logo}>
                     <Text style={{
-                        fontSize: 60,
+                        fontSize: 54,
                         color: 'rgba(249, 129, 37, 1)'}}>
-                        linmart
+                        shop.it
                     </Text>
                 </View>
 

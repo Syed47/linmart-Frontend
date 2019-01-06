@@ -19,7 +19,8 @@ class ListItem extends React.Component{
     addToBasket() {
         itemStore.addItem({ 
             memberid: this.props.memberid,
-            shopname: this.props.shopname, 
+            membername: this.props.membername, 
+            itemid: this.props.itemid,
             itemname: this.props.itemname, 
             itemprice: this.props.itemprice, 
             area: this.props.area
@@ -67,7 +68,7 @@ class ListItem extends React.Component{
                         </Text>
                         {/* this will render the source of the item only when the listItem gets render in Checkout.js*/}
                         {this.props.cross ? (<Text style = {{color: 'white',fontSize: 12}}>
-                                                    {this.props.shopname}
+                                                    {this.props.membername}
                                                 </Text>) : null}
                     </View>
                     <View style={styles.foodprice}>

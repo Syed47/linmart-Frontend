@@ -1,11 +1,11 @@
-import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import React                      from 'react';
+import { createStackNavigator  }  from 'react-navigation';
 
-import Home from '../components/Home';
-import Stack from '../components/Stack';
-import SignIn from '../User/SignIn';
-import SignUp from '../User/SignUp';
-import CheckOut from '../components/CheckOut';
+import Home                       from '../components/Home';
+import Stack                      from '../components/Stack';
+import SignIn                     from '../User/SignIn';
+import SignUp                     from '../User/SignUp';
+import CheckOut                   from '../components/CheckOut';
 
 export const ScreenSwitcher = createStackNavigator({
 
@@ -22,7 +22,7 @@ export const ScreenSwitcher = createStackNavigator({
     //     },
     // },
     Home: {
-        screen: Home,
+    screen: Home,
         navigationOptions: {
             title: 'linmart',
         },

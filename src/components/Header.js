@@ -1,11 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput,Image,TouchableOpacity,ScrollView } from 'react-native';
+import { View, 
+        Text, 
+        StyleSheet, 
+        TextInput,
+        Image,
+        TouchableOpacity,
+        ScrollView 
+    } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 class Header extends React.Component {
 
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             location: '',
             suggestions: []
@@ -33,7 +40,11 @@ class Header extends React.Component {
 
                 {this.state.suggestions.map(location => (
                     <TouchableOpacity style = {styles.listItem}
-                        onPress = {()=> this.setState({location})}>
+                        onPress = {()=> this.setState( {location} , function() {
+                            // set the props.location to location
+                            this.props.location(location);
+                            this.state.suggestions.length = 0
+                        }) }>
 
                         <Text style = {{fontStyle: 'italic', fontSize: 16}}>
                             {location}
@@ -61,8 +72,16 @@ class Header extends React.Component {
                                 this.setState({location: input}, ()=>{
                                     suggestions.length === 0 ? this.getSuggestions(): null;
                                 });       
-                            } else {this.setState({suggestions: []})}
+
+                            // make this code cleaner *******************
+
+                            } else if (input.length === 0){
+                                this.props.location('');
+                            } else {
+                                this.setState({suggestions: []})
+                            }
                         }}
+
                         onSubmitEditing = {() => {
                             
                         }}
