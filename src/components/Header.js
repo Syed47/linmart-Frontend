@@ -5,9 +5,9 @@ import { View,
         TextInput,
         Image,
         TouchableOpacity,
-        ScrollView 
-    } from 'react-native';
+        ScrollView } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import { bs_leftmost } from './util';
 
 class Header extends React.Component {
 
@@ -15,20 +15,30 @@ class Header extends React.Component {
         super(props);
         this.state = {
             location: '',
+            searched: false,
+            requested: false,
+            subset: [],
             suggestions: []
         }
+
+                                // this.setState({
+                                //         location: input, 
+                                //         requested: true
+                                //     }, () => {
+          // this.getSuggestions();
+                                // });   
+
     }
 
     async getSuggestions() {
-        const response = await fetch('http://192.168.0.11:4000/getLocationsSuggestions', {
+        const response = await fetch('http://192.168.0.11:4000/getLocationSuggestions', {
             method: 'POST', 
             body: JSON.stringify({location: this.state.location}),
             headers:{'Content-Type': 'application/json'}
         });
         try {
             const data = await response.json();
-            this.setState({suggestions: data})
-            // alert("requesting")
+            this.setState({suggestions: data.sort()})
         } catch(err) {
             alert(err)
         }
@@ -43,7 +53,7 @@ class Header extends React.Component {
                         onPress = {()=> this.setState( {location} , function() {
                             // set the props.location to location
                             this.props.location(location);
-                            this.state.suggestions.length = 0
+                            this.state.suggestions.length = 0 // empty the array
                         }) }>
 
                         <Text style = {{fontStyle: 'italic', fontSize: 16}}>
@@ -55,9 +65,49 @@ class Header extends React.Component {
         );
     }
 
+
+
+    mutateSuggestions(input) {
+
+        const { searched, subset, suggestions, requested } = this.state;
+
+        if (!requested) {
+            this.setState({
+                    location: input, 
+                    requested: true
+                }, () => {
+                    if (!suggestions.length)
+                        this.getSuggestions();
+            });     
+        } else {
+            let _suggestion = [] 
+
+            if (!searched) {
+                this.setState({
+                    subset: bs_leftmost(suggestions, input),
+                    searched: true
+                })
+            }
+
+            for (let i = 0; i < subset.length; i++) {
+                let match = true;
+                for (let j = 0; j < input.length; j++) {
+                    if (input[j] !== subset[i][j]) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) _suggestion.push(subset[i])
+            }
+
+            this.setState({ suggestions: _suggestion })   
+        }
+    }
+
+
     render() {
  
-        const { location, suggestions } = this.state;
+        const { location } = this.state;
 
         return (
             <View style = {{flex:1,justifyContent: 'space-between', width: '100%'}}>
@@ -66,24 +116,26 @@ class Header extends React.Component {
                         style={styles.textfield}
                         placeholder = 'Location'
                         defaultValue = {location}
-                        returnKeyType="next"
-                        onChangeText = {async (input)=> {
-                            if (input.length > 1) {
-                                this.setState({location: input}, ()=>{
-                                    suggestions.length === 0 ? this.getSuggestions(): null;
-                                });       
+                        returnKeyType = {'next'}
+                        onChangeText = { async (input) => {
 
-                            // make this code cleaner *******************
-
-                            } else if (input.length === 0){
+                            if (!input.length) {
                                 this.props.location('');
+                                this.setState({
+                                    suggestions : [], 
+                                    searched: false, 
+                                    requested: false
+                                })
                             } else {
-                                this.setState({suggestions: []})
+                                this.mutateSuggestions(input);
                             }
                         }}
 
-                        onSubmitEditing = {() => {
-                            
+                        onSubmitEditing = { () => {
+                            // can be useful
+                        }}
+                        onFocus = { () => {
+                            // can be useful
                         }}
                     />
 
@@ -142,3 +194,58 @@ const styles = StyleSheet.create({
 
 export default withNavigation(Header);
 
+
+
+
+// for (let i = 0; i < suggestions.length; i++) {
+//     let match = true;
+//     for (let j = 0; j < input.length; j++)
+//         match = input[j] !== suggestions[i][j] ? false : true;
+//     if (match) _suggestion.push(suggestions[i])
+// }
+
+
+
+// if (!input.length) {
+// this.props.location('');
+// this.setState({
+//     suggestions : [], 
+//     searched: false, 
+//     requested: false
+// })
+// } else {
+// if (!requested) {
+//     this.setState({
+//             location: input, 
+//             requested: true
+//         }, () => {
+//             if (!suggestions.length) {
+//                 this.getSuggestions();
+//             }
+//     });     
+// } else {
+//     let _suggestion = [] 
+
+//     if (!searched) {
+//         this.setState({
+//             subset: this.bs_leftmost(suggestions, input),
+//             searched: true
+//         })
+//     }
+
+//     for (let i = 0; i < subset.length; i++) {
+//         let match = true;
+//         for (let j = 0; j < input.length; j++) {
+//             // match = input[j] === subset[i][j] ? true : false;
+//             if (input[j] !== subset[i][j]) {
+//                 match = false;
+//                 break;
+//             }
+//         }
+//         if (match) _suggestion.push(subset[i])
+//     }
+
+//     this.setState({ suggestions: _suggestion })   
+// }
+
+// }

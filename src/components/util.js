@@ -97,10 +97,31 @@ function binary_search(arr, node) {
     return 'not found'
 }
 
+// Implementation of Binary Search algorithm
+// finds the leftmost occurence
+function bs_leftmost(arr, x) {
+
+    let low = 0, high = arr.length - 1;
+    let mid;
+    x = x.charCodeAt(0)
+    while (low <= high) {
+        mid = Math.floor((low + high) / 2);
+        if (x === arr[mid].charCodeAt(0)) {
+            high = mid - 1;
+        } else if (x < arr[mid].charCodeAt(0)) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+        } 
+    }
+    return arr.slice(mid);
+}
+
 module.exports = {
     itemStore, 
     match,
     crypto, 
     binary_search,
+    bs_leftmost,
     user_data_from_server
 }
