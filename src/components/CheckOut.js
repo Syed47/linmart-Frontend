@@ -39,7 +39,7 @@ class CheckOut extends React.Component{
 		// alert(JSON.stringify(items))
 		const userid = user_data_from_server.userid;
 
-		const request = await fetch('http://192.168.0.11:4000/checkout', {
+		const request = await fetch('http://172.20.10.2:4000/checkout', {
 	        method: 'POST', 
 	        body: JSON.stringify({items: items, userid: userid}),
 	        headers:{'Content-Type': 'application/json'}

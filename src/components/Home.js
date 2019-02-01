@@ -16,7 +16,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            url: 'http://192.168.0.11:4000/getMembers', // get from the browser sidebar in expo tab
+            url: 'http://172.20.10.2:4000/getMembers', // get from the browser sidebar in expo tab
             passedInfo: [], // only stores the original data that comes from the server
             members: [] // this is the altered data
         }

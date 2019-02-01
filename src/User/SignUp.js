@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 
 import { withNavigation } from 'react-navigation';
-import street from '../Images/street.jpg';
-import cart from '../Images/cart.jpg';
-import logo from '../Images/logo.jpg';
-import {crypto, match} from '../components/util';
+import street from '../assets/street.jpg';
+import cart from '../assets/cart.jpg';
+import logo from '../assets/logo.jpg';
+import { hashString, match } from '../components/util';
 
 
 class SignUp extends React.Component {
@@ -37,8 +37,8 @@ class SignUp extends React.Component {
         for (let key in this.state) {
             // check if any data is left blank
             if (!this.state[key]) {
-                alert('Please fill the form.')
-                return
+                alert('Please fill the form.');
+                return;
             }
         }
 
@@ -49,12 +49,12 @@ class SignUp extends React.Component {
 
 		const userData = {
 			username: username,
-			password: crypto.encrypt(password),
+			password: hashString(password),
 			email: email,
 			address: address
 		}
 
-        fetch('http://192.168.0.11:4000/signUp', {
+        fetch('http://172.20.10.2:4000/signup', {
             method: 'POST', 
             body: JSON.stringify(userData), 
             headers: {
@@ -62,7 +62,10 @@ class SignUp extends React.Component {
             }
         }).then(response => response.json())
         .then(data => {
-            data.msg === 'Successfull' ? this.props.navigation.navigate('SignIn') : alert('Try Again!')
+            if (data.msg === 'Successfull')
+                this.props.navigation.navigate('SignIn')
+            else
+                alert('Unexpected Error!, Please try later!')
         }).catch(err => alert(err))
 
 	}
@@ -75,7 +78,7 @@ class SignUp extends React.Component {
 					<Text style = {{
                         fontSize: 32,
                         color: 'rgba(249, 129, 37, 1)'}}>
-						linmart
+						shop.it
 					</Text>
 				</View>
 
@@ -86,11 +89,11 @@ class SignUp extends React.Component {
 						onChangeText = {(username) => this.setState({username})}
                         returnKeyType="next"
                         onSubmitEditing = {() => {
-                            if (match(this.state.username, /[a-zA-Z0-9._-]+/)) {
+                            if (match(this.state.username, /^[a-zA-Z0-9.\-_]{4,20}$/)) {
                                 Keyboard.dismiss();
                                 return;
                             }
-                            alert('Please Enter valid Username')
+                            alert(`Username must not contain symbols or spaces.\nEnter atleast a 4 letter username`)
                         }}
 					/>
 					<TextInput
@@ -100,7 +103,7 @@ class SignUp extends React.Component {
                         returnKeyType="next"
                         onSubmitEditing = {() => {
                             // look for a strict email regex
-                            if (match(this.state.email, /[a-zA-Z0-9._-]+@[a-zA-Z]+\.(com|ac\.[a-z])/)) {
+                            if (match(this.state.email, /[a-zA-Z0-9._-]+@[a-zA-Z]+\.(com|ac\.[a-z]{2})/)) {
                                 Keyboard.dismiss();
                                 return;
                             }
@@ -114,11 +117,12 @@ class SignUp extends React.Component {
 						onChangeText = {(address) => this.setState({address})}	
                         returnKeyType="next"
                         onSubmitEditing = {() => {
-                            if (match(this.state.address, /[a-zA-Z0-9\.]+\s?/)) {
+                            // might not need any regex as addresses can be infinite
+                            if (match(this.state.address, /[A-Za-z0-9'\.\-\s\,]+/)) {
                                 Keyboard.dismiss();
                                 return;
                             }
-                            alert('Please Enter valid Address')
+                            alert('Address must not contain any symbols')
                         }}
 					/>		
 					<TextInput
@@ -128,18 +132,18 @@ class SignUp extends React.Component {
 						onChangeText = {(password) => this.setState({password})}
                         returnKeyType="next"
                         onSubmitEditing = {() => {
-                            if (match(this.state.username, /[a-zA-Z0-9£$._-]+/)) {
+                            if (match(this.state.password, /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[-_$@])[\w-_$@]{6,20}$/ )) {
                                 Keyboard.dismiss();
                                 return;
                             }
-                            alert('Please Enter valid Password')
+                            alert('Password must contain an Uppercase,\n Lowercase letter, Symbol and a number!')
                         }}
 					/>	
 					<TextInput
 						style = {styles.txtfield}
 						placeholder = {'Confirm Password'}
                         secureTextEntry={true}
-						onChangeText = {(confirmPassword) => this.setState({confirmPassword})}	
+						onChangeText = {(confirmPassword) => this.setState({ confirmPassword })}	
                         returnKeyType="done"
                         onSubmitEditing = {() => {
                             Keyboard.dismiss();
@@ -153,13 +157,7 @@ class SignUp extends React.Component {
 						onPress = { () => this.signUp() }>
 						<Text style={styles.buttontext}>SignUp</Text>
 					</TouchableOpacity>
-
-				   {/*<TouchableOpacity style={styles.touchableopacity}
-                        onPress = { () => this.signUp() }>
-                        <Text style={styles.buttontext}>SignUp</Text>
-                    </TouchableOpacity>*/}
-
-                	</View>
+            	</View>
 			</ImageBackground>
 		);
 	}

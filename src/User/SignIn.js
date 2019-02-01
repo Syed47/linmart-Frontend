@@ -1,27 +1,24 @@
 import React from 'react';
-import { 
-    View, 
-    Text, 
-    StyleSheet, 
-    TextInput, 
-    ImageBackground, 
-    TouchableOpacity,
-    Keyboard
-} from 'react-native';
+import { View, 
+        Text, 
+        StyleSheet, 
+        TextInput, 
+        ImageBackground, 
+        TouchableOpacity,
+        Keyboard } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import street from '../Images/street.jpg';
-import cart from '../Images/cart.jpg';
-import logo from '../Images/logo.jpg';
+import street from '../assets/street.jpg';
+import cart from '../assets/cart.jpg';
+import logo from '../assets/logo.jpg';
 import { match, 
-        crypto, 
-        user_data_from_server 
-    } from '../components/util';
+        hashString,
+        user_data_from_server } from '../components/util';
 
 // to access native keys: event.nativeEvent.key
 
 class SignIn extends React.Component{
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             username: '',
@@ -30,35 +27,31 @@ class SignIn extends React.Component{
         this.navigate = this.props.navigation.navigate;
     }
 
-    signIn(){
-        /*
-            @if both username and password are empty then the user can still signin.
-            @need to fix this with regex
-        */
-
-        const ePassword = crypto.encrypt(this.state.password)
-        // alert(ePassword)
+    signIn() {
         
-        fetch('http://192.168.0.11:4000/signin', {
+        fetch('http://172.20.10.2:4000/signin', {
             method: 'POST', 
             body: JSON.stringify({
                 username: this.state.username,
-                password: ePassword
+                password: hashString(this.state.password)
             }), 
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        .then(res => {
-            // this.setState({password: ''}) // this need to reset after each try -. not yet done! 
-            return (res.json())
-        })
+        .then(res => res.json())
         .then(data => {
-            data.isValid ? this.navigate('Home') : alert('Try Again!'+ data.isValid)
-            // alert(data.userid)
-            user_data_from_server.userid = data.userid
-            alert(user_data_from_server.userid)
 
+            if (data.isValid) {
+                this.navigate('Home')
+                user_data_from_server.userid = data.userid 
+                // Reset Username & Password to undefined
+                this.setState({ username: '', password: '' }) 
+                
+            } else {
+                alert('Try Again!,\n Invalid Username or Password')
+            }
+            // data.isValid ? this.navigate('Home') : alert('Try Again!,\n Invalid Username or Password')
         }).catch(err => alert(err))
     }
 
@@ -66,7 +59,7 @@ class SignIn extends React.Component{
     render(){
         return(    
             <ImageBackground style={styles.main} source={cart}>
-            
+                
                 <View style={styles.logo}>
                     <Text style={{
                         fontSize: 54,
@@ -79,26 +72,30 @@ class SignIn extends React.Component{
                     <TextInput
                         style={styles.txtfield}
                         placeholder="Username"
+                        defaultValue = {this.state.username}
                         onChangeText={ username => this.setState({ username }) }
                         returnKeyType="next"
                         onSubmitEditing = {() => {
-                            if (match(this.state.username, /[a-zA-Z0-9._-]+/)) {
+                            //Only checks for white spaces: not char such as &^%<>?
+                            if (match(this.state.username, /^[a-zA-Z0-9.\-_]{4,20}$/)) {
                                 Keyboard.dismiss();
                                 return;
                             }
                             alert('Please Enter valid Username')
                         }}
                     />
+
                    <TextInput
                         style={styles.txtfield}
                         placeholder="Password"
+                        defaultValue = {this.state.password}
                         secureTextEntry={true}
                         onChangeText={ password =>  this.setState({ password }) }
                         returnKeyType="done"
                         onSubmitEditing = {() => {
-                            if (match(this.state.password, /[a-zA-Z0-9£$._-]+/)) {
+                            if (match(this.state.password, /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[-_$@])[\w-_$@]{6,20}$/)) {
                                 Keyboard.dismiss();
-                                this.signIn()
+                                this.signIn();
                                 return;
                             }
                             alert('Please Enter valid Password')                            
@@ -109,11 +106,15 @@ class SignIn extends React.Component{
                 <View style={styles.button_wrapper}>
 
                     <TouchableOpacity onPress = {()=> this.navigate('SignUp')}>
-                        <Text style = {styles.labeltext}> Haven't yet signed-up</Text>
+                        <Text style = {styles.labeltext}> 
+                            Haven't yet signed-up
+                        </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress = {()=> alert('Not yet ready!')}>
-                        <Text style = {styles.labeltext}> Forgot password!</Text>
+                    <TouchableOpacity onPress = {()=> this.navigate('PassReset')}>
+                        <Text style = {styles.labeltext}>
+                            Forgot password!
+                        </Text>
                     </TouchableOpacity>
 
                 </View>

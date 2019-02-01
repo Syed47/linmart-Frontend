@@ -16,7 +16,7 @@ const Card = props => {
         <TouchableOpacity style = {styles.main}
             onPress={ async () => {
                 if (props.nav) { // validate/allow navigation
-                    const response = await fetch('http://192.168.0.11:4000/getItems', {
+                    const response = await fetch('http://172.20.10.2:4000/getItems', {
                         method: 'POST', 
                         body: JSON.stringify({
                             // memberid: id -> use this get member by id, remove the other 2
@@ -63,12 +63,9 @@ const Card = props => {
                     <Text style={styles.area}>
                         {area}
                     </Text>
-                    {
-                        status === 'open' ? 
-                            <Text style={{fontSize: 18, margin: 5,color:'lime'}}>{status}</Text> 
-                            : <Text style={{fontSize: 18, margin: 5,color:'red'}}>{status}</Text>
-                    }
- 
+                    <Text style={{fontSize: 18, margin: 5,color:status === 'open' ? 'lime' : 'red'}}>
+                        {status}
+                    </Text> 
                 </View>
 
                 <View style={styles.rating_wrapper}>

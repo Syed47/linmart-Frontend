@@ -20,18 +20,13 @@ class Header extends React.Component {
             subset: [],
             suggestions: []
         }
-
-                                // this.setState({
-                                //         location: input, 
-                                //         requested: true
-                                //     }, () => {
-          // this.getSuggestions();
-                                // });   
+        
+        this.getSuggestions();
 
     }
 
     async getSuggestions() {
-        const response = await fetch('http://192.168.0.11:4000/getLocationSuggestions', {
+        const response = await fetch('http://172.20.10.2:4000/getLocationSuggestions', {
             method: 'POST', 
             body: JSON.stringify({location: this.state.location}),
             headers:{'Content-Type': 'application/json'}
@@ -69,6 +64,9 @@ class Header extends React.Component {
 
     mutateSuggestions(input) {
 
+        // the suggestion list should be atmost 5-6 values long
+        // fix this issue: might need [].freeze() or new Array(size)
+
         const { searched, subset, suggestions, requested } = this.state;
 
         if (!requested) {
@@ -95,7 +93,7 @@ class Header extends React.Component {
                     if (input[j] !== subset[i][j]) {
                         match = false;
                         break;
-                    }
+                    } 
                 }
                 if (match) _suggestion.push(subset[i])
             }
@@ -112,6 +110,14 @@ class Header extends React.Component {
         return (
             <View style = {{flex:1,justifyContent: 'space-between', width: '100%'}}>
                 <View style={styles.navBar}>
+                    <TouchableOpacity style= {styles.settings}
+                        onPress = {()=> this.props.navigation.navigate('Profile')}>
+
+                        <Image style = {styles.image} 
+                            source={require('./icons/settings.png')}/>
+
+                    </TouchableOpacity>
+
                     <TextInput
                         style={styles.textfield}
                         placeholder = 'Location'
@@ -145,7 +151,7 @@ class Header extends React.Component {
                         }}>
 
                         <Image style = {styles.image} 
-                            source={require('./icons/basket.png')}/>
+                            source={require('./icons/trolley.png')}/>
 
                     </TouchableOpacity>
                 </View>
@@ -162,25 +168,44 @@ const styles = StyleSheet.create({
     navBar: {
         flex: 1,
         flexDirection: 'row',        
-        justifyContent: 'space-between',
-        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        // borderWidth: 1,
+        // borderColor: 'rgba(55,55,55,0.5)',
         backgroundColor: 'white',
-        padding: 5,
-        maxHeight: 55
+        paddingHorizontal: '1%',
+        paddingTop: '1%', // reduce these two to make the Header Comp shorter in height
+        paddingBottom: '5%', // reduce these two to make the Header Comp shorter in height
+        backgroundColor: 'rgba(155,155,155,0.1)'
     },
     textfield:{
-        flex: 7,    
-        marginHorizontal: 5,
+        flex: 5,
+        borderWidth: 1,
+        borderColor: 'rgba(55,55,55,0.5)',
+        borderRadius: 10,    
+        
+        marginHorizontal: '1%',
+        paddingHorizontal: '2%',
+        paddingTop: '2%',
+        paddingBottom: '2%',
+        
+        backgroundColor: 'white',
         color: "black",
         fontStyle: 'italic',
         fontSize: 18,
     },
     settings:{
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        // borderWidth: 1,
+        // borderColor: 'red',
+        // borderRadius: 30,   
     },
     image:{
-        width: 40,
-        height: 40,
+        width: 32,
+        height: 32,
     },
     listItem: {
         alignItems: 'center',

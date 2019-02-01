@@ -13,7 +13,9 @@ const itemStore  = {
     },
     flush() {
         this.__itemsSelected.splice(0,this.__itemsSelected.length)
-        if (!this.__itemsSelected.length) return true
+        if (!this.__itemsSelected.length) {
+            return true;
+        }
     }
 }
 
@@ -23,28 +25,25 @@ const user_data_from_server = {
     userid: 22
 } 
 
-/*
-    @value: is the text need to be check against a pattern
-    @pattern: it must be regex expression, inclosed inside two forward slashes: /regex/
-*/
-function match(value, pattern) {    
+
+// @value: is the text need to be check against a pattern
+// @pattern: it must be regex expression, inclosed inside two forward slashes: /regex/
+// @err: user defined custom error message : default value is provided too
+function match(value, pattern, err = 'Invalid String') {    
     try {
-        let data = pattern.exec(value);
+        let data = pattern.exec(value); // -> Object
         /*
-            data returns an object where the first value is the 
-            check to see if data is not null || undefined
-            extracted string and data['input'] is the actual value
-
-            the return value can also be treated as a boolean,i.e length > 0 = true, length  == 0 = false
+            the return value can also be treated as a boolean,
+            i.e length > 0 = true, length == 0 = false
         */
-        return (data && data[0] === data['input']) ? data[0] : undefined
+        return (data && data[0] === data['input']) ? data[0] : null
     } catch(err) {
-        console.log(err)
+        throw new Error(err)
     }
-
 }
 
 
+// Deprecated ALGO
 const crypto = {
     
     key: 'catchmeifyoucan', // vernom-cipher key
@@ -74,6 +73,40 @@ const crypto = {
         return this.__HASH__.call(this, string, this.key)
     }
 }
+
+
+// String hashing algorithm 
+// Collision probability of 1 : 2 ** 32
+// @param: string -> primitive String
+// @return: output -> primitive String  
+const hashString = function(string) {
+    
+    let hash = 0,
+        chr, 
+        strlen = string.length, 
+        keylen = 0
+        output = '';
+
+    if (!strlen) return undefined; // if : strlen === 0
+    
+    for (let i = 0; i < strlen; i++) {
+        chr   = string.charCodeAt(i);
+        hash  = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit Integer
+    }
+
+    hash *= hash < 0 ? -1 : 1; // Convert -hash into +hash
+
+    const key = String(hash) // Convert key:Int32 into String
+    keylen = key.length;
+
+    for (let i = 0; i < keylen; i++) {
+        output += !(i % 2) ? String.fromCharCode(Number(key[i]) + 99) : key[i]
+    }
+
+    return output;
+}
+
 
 
 // A binary search algorithm
@@ -120,7 +153,8 @@ function bs_leftmost(arr, x) {
 module.exports = {
     itemStore, 
     match,
-    crypto, 
+    crypto,
+    hashString, 
     binary_search,
     bs_leftmost,
     user_data_from_server
