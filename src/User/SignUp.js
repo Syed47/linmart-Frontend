@@ -14,7 +14,7 @@ import { withNavigation } from 'react-navigation';
 import street from '../assets/street.jpg';
 import cart from '../assets/cart.jpg';
 import logo from '../assets/logo.jpg';
-import { hashString, match } from '../components/util';
+import { hashString, match } from '../utils/util';
 
 
 class SignUp extends React.Component {
@@ -107,7 +107,7 @@ class SignUp extends React.Component {
                                 Keyboard.dismiss();
                                 return;
                             }
-                            alert('Please Enter valid Email')
+                            alert('Please enter valid email')
                         }}
 					/>
 						

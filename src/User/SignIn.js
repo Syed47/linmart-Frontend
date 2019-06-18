@@ -12,11 +12,11 @@ import cart from '../assets/cart.jpg';
 import logo from '../assets/logo.jpg';
 import { match, 
         hashString,
-        user_data_from_server } from '../components/util';
+        user_data_from_server } from '../utils/util';
 
 // to access native keys: event.nativeEvent.key
 
-class SignIn extends React.Component{
+class SignIn extends React.Component {
 
     constructor(props) {
         super(props);
@@ -44,12 +44,12 @@ class SignIn extends React.Component{
 
             if (data.isValid) {
                 this.navigate('Home')
-                user_data_from_server.userid = data.userid 
+                user_data_from_server.userid = data.userid || 45; // 45 : test data
                 // Reset Username & Password to undefined
                 this.setState({ username: '', password: '' }) 
                 
-            } else {
-                alert('Try Again!,\n Invalid Username or Password')
+            } else if (!data.isValid) {
+                alert('Try Again!\n Invalid username or password')
             }
             // data.isValid ? this.navigate('Home') : alert('Try Again!,\n Invalid Username or Password')
         }).catch(err => alert(err))
@@ -76,12 +76,13 @@ class SignIn extends React.Component{
                         onChangeText={ username => this.setState({ username }) }
                         returnKeyType="next"
                         onSubmitEditing = {() => {
+                            Keyboard.dismiss();
                             //Only checks for white spaces: not char such as &^%<>?
-                            if (match(this.state.username, /^[a-zA-Z0-9.\-_]{4,20}$/)) {
-                                Keyboard.dismiss();
-                                return;
-                            }
-                            alert('Please Enter valid Username')
+                            if (this.state.username.length < 4) {
+                                alert('Username must be atleast 4 characters')
+                            } else if (!match(this.state.username, /^[a-zA-Z0-9.\-_]{4,20}$/)) {
+                                alert('Invalid characters in username')
+                            }                             
                         }}
                     />
 
@@ -93,25 +94,27 @@ class SignIn extends React.Component{
                         onChangeText={ password =>  this.setState({ password }) }
                         returnKeyType="done"
                         onSubmitEditing = {() => {
-                            if (match(this.state.password, /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[-_$@])[\w-_$@]{6,20}$/)) {
-                                Keyboard.dismiss();
-                                this.signIn();
-                                return;
+                            Keyboard.dismiss();                            
+                            if (this.state.password.length < 6) {
+                                alert('Password must be atleast 6 characters')
+                            } else if (match(this.state.password, /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[-_$@])[\w-_$@]{6,20}$/)) {
+                                this.signIn(); 
+                            } else {
+                                alert('Password must contain letter, symbol and a number ')
                             }
-                            alert('Please Enter valid Password')                            
                         }}
                     />
                 </View>
 
                 <View style={styles.button_wrapper}>
 
-                    <TouchableOpacity onPress = {()=> this.navigate('SignUp')}>
+                    <TouchableOpacity onPress = { ()=> this.navigate('SignUp') }>
                         <Text style = {styles.labeltext}> 
-                            Haven't yet signed-up
+                           Signup
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress = {()=> this.navigate('PassReset')}>
+                    <TouchableOpacity onPress = { ()=> this.navigate('PassReset') }>
                         <Text style = {styles.labeltext}>
                             Forgot password!
                         </Text>

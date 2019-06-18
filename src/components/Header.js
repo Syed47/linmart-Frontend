@@ -7,7 +7,7 @@ import { View,
         TouchableOpacity,
         ScrollView } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { bs_leftmost } from './util';
+import { bs_leftmost } from '../utils/util';
 
 class Header extends React.Component {
 
@@ -20,22 +20,23 @@ class Header extends React.Component {
             subset: [],
             suggestions: []
         }
-        
         this.getSuggestions();
-
     }
 
     async getSuggestions() {
-        const response = await fetch('http://172.20.10.2:4000/getLocationSuggestions', {
-            method: 'POST', 
-            body: JSON.stringify({location: this.state.location}),
-            headers:{'Content-Type': 'application/json'}
-        });
+        const response = await fetch('http:/172.20.10.2:4000/getLocationSuggestions', {
+            // Request Type
+            method: 'POST',
+            // Data sent to backend
+            body: JSON.stringify({ location: this.state.location }),
+            // Header/Data type info
+            headers:{ 'Content-Type': 'application/json' }
+        }   );
         try {
-            const data = await response.json();
-            this.setState({suggestions: data.sort()})
+            const data = await response.json(); // Converts JSON in Object
+            this.setState({suggestions: data})
         } catch(err) {
-            alert(err)
+            // alert('Invalid Request') // Render error msgs to user
         }
     }
 
@@ -63,17 +64,12 @@ class Header extends React.Component {
 
 
     mutateSuggestions(input) {
-
-        // the suggestion list should be atmost 5-6 values long
-        // fix this issue: might need [].freeze() or new Array(size)
-
         const { searched, subset, suggestions, requested } = this.state;
 
         if (!requested) {
             this.setState({
-                    location: input, 
-                    requested: true
-                }, () => {
+                location: input, 
+                requested: true }, () => {
                     if (!suggestions.length)
                         this.getSuggestions();
             });     
@@ -86,7 +82,6 @@ class Header extends React.Component {
                     searched: true
                 })
             }
-
             for (let i = 0; i < subset.length; i++) {
                 let match = true;
                 for (let j = 0; j < input.length; j++) {
@@ -97,7 +92,6 @@ class Header extends React.Component {
                 }
                 if (match) _suggestion.push(subset[i])
             }
-
             this.setState({ suggestions: _suggestion })   
         }
     }
@@ -114,7 +108,7 @@ class Header extends React.Component {
                         onPress = {()=> this.props.navigation.navigate('Profile')}>
 
                         <Image style = {styles.image} 
-                            source={require('./icons/settings.png')}/>
+                            source={require('../assets/icons/settings.png')}/>
 
                     </TouchableOpacity>
 
@@ -125,7 +119,7 @@ class Header extends React.Component {
                         returnKeyType = {'next'}
                         onChangeText = { async (input) => {
 
-                            if (!input.length) {
+                            if (input.length ===  1) {
                                 this.props.location('');
                                 this.setState({
                                     suggestions : [], 
@@ -151,7 +145,7 @@ class Header extends React.Component {
                         }}>
 
                         <Image style = {styles.image} 
-                            source={require('./icons/trolley.png')}/>
+                            source={require('../assets/icons/trolley.png')}/>
 
                     </TouchableOpacity>
                 </View>

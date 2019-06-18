@@ -6,27 +6,28 @@ import {
         Image, 
         ScrollView,
         TouchableOpacity,
-        Dimensions 
-    } from 'react-native';
+        Dimensions } from 'react-native';
 
 import Header from  './Header';
 import Card from './Card';
 
 class Home extends React.Component {
     constructor(props) {
-        super(props);
+        super(props); 
         this.state = {
-            url: 'http://172.20.10.2:4000/getMembers', // get from the browser sidebar in expo tab
-            passedInfo: [], // only stores the original data that comes from the server
+        	// get from the browser sidebar in expo tab
+            url: 'http://172.20.10.2:4000/getMembers', 
+            // only stores the original data that comes from the server
+            passedInfo: [], 
             members: [] // this is the altered data
         }
-
         this.filterByLocation = this.filterByLocation.bind(this)
-
         this.fetchData()
     }
-
-    // Request to the server to get members data
+    /*
+    	* request members data from the server
+    	* reset the old state of the component to new state
+    */
     fetchData() {
         fetch(this.state.url)
             .then(res => res.json())
@@ -38,8 +39,9 @@ class Home extends React.Component {
             })
             .catch(err => alert(err)) 
     }
-
-    // Render each member from the data received
+    /*
+		renders all the members data in Card Component
+    */
     renderMembers(members){
         const cards = members.map((member, index) => {
             return ( <Card info={member} key = {index} nav = {true}/> )
@@ -47,13 +49,19 @@ class Home extends React.Component {
         return cards;
     } 
 
-
+    /* 
+    	callback: [function]
+   		reset the state of the component
+   	*/
     filterData(callback) {
         const filteredData = this.state.passedInfo.filter(callback);
         this.setState({members: filteredData})    
     }
 
-
+    /*
+		ctg: string
+		filters members based on catagory
+    */
     filterBycatagory(ctg) {
         //@param : by -> needs to be either 'shop' or 'res'
         if (ctg !== 'shop' && ctg !== 'restaurant')  return;
@@ -61,7 +69,10 @@ class Home extends React.Component {
         // const filteredData = this.state.passedInfo.filter(({catagory}) => catagory === by);
         // this.setState({members: filteredData})
     }
-
+    /*
+		loc: string
+		filters members based on location
+    */
     filterByLocation(loc) {
         if (loc) {
             this.filterData(item => item.area === loc);
@@ -69,7 +80,10 @@ class Home extends React.Component {
             this.setState({ members: this.state.passedInfo})
         }
     }
-
+    /*
+		the header-bar of the Home screen
+		return: React.View Component
+    */
     searchFilter() {
         return (
             <View style={styles.style_main}>
@@ -78,20 +92,22 @@ class Home extends React.Component {
                     <TouchableOpacity style={styles.button_shape}
                         onPress={() => this.filterBycatagory('shop')}>
                         <Text style={styles.text}>Super-Stores</Text>
-                        <Image source={require('./icons/supermarket.png')} />
+                        <Image source={require('../assets/icons/supermarket.png')} />
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.button_shape}
                         onPress={() => this.filterBycatagory('restaurant')}>
                         <Text style={styles.text}>Restaurants</Text>
-                        <Image source={require('./icons/resturant.png')} />
+                        <Image source={require('../assets/icons/resturant.png')} />
                     </TouchableOpacity>
 
                 </View>
             </View>
         )   
     }
-
+    /*
+		render all UI on the screen
+    */
     render() { 
         return (
             <View style={styles.main}>
@@ -104,8 +120,9 @@ class Home extends React.Component {
         )
     } 
 }
-
 console.disableYellowBox = true
+
+// CSS StyleSheet of the component
 const styles = StyleSheet.create({
     // Home Styling
     main:{

@@ -1,28 +1,8 @@
 
-// this object work as bridge between Stack and Checkout screen
-const itemStore  = {
-    __itemsSelected: [], // stays private
-    get getItems() {
-        return this.__itemsSelected
-    },
-    addItem(item) {
-        this.__itemsSelected.push(item)
-    },
-    set setItemsSelected(list) {
-        this.__itemsSelected = [...list]
-    },
-    flush() {
-        this.__itemsSelected.splice(0,this.__itemsSelected.length)
-        if (!this.__itemsSelected.length) {
-            return true;
-        }
-    }
-}
-
 // store the data of current user
 // the data has links to the DB
 const user_data_from_server = {
-    userid: 22
+    userid: 45
 } 
 
 
@@ -43,7 +23,7 @@ function match(value, pattern, err = 'Invalid String') {
 }
 
 
-// Deprecated ALGO
+//* Deprecated * need Improvement 
 const crypto = {
     
     key: 'catchmeifyoucan', // vernom-cipher key
@@ -87,55 +67,39 @@ const hashString = function(string) {
         keylen = 0
         output = '';
 
-    if (!strlen) return undefined; // if : strlen === 0
+    if (!strlen) throw TypeError('Input cannot be null')
+    if (!(typeof string === 'string'))  
+        throw TypeError('Input must be a string value'); 
     
     for (let i = 0; i < strlen; i++) {
         chr   = string.charCodeAt(i);
         hash  = ((hash << 5) - hash) + chr;
         hash |= 0; // Convert to 32bit Integer
     }
+    // Custom modification to the hash value
+    hash *= hash < 0 ? -1 : 1; // Converts -hash into +hash
 
-    hash *= hash < 0 ? -1 : 1; // Convert -hash into +hash
-
-    const key = String(hash) // Convert key:Int32 into String
+    const key = String(hash) // Converts key:Int32 into String
     keylen = key.length;
 
     for (let i = 0; i < keylen; i++) {
-        output += !(i % 2) ? String.fromCharCode(Number(key[i]) + 99) : key[i]
+        output += !(i % 2) ? 
+                    String.fromCharCode(Number(key[i]) + 99) : 
+                    key[i]
     }
 
     return output;
 }
 
 
-
-// A binary search algorithm
-// @arr: the list needed to be searched
-// @node: value required to be searched in the @arr
-function binary_search(arr, node) {
-    console.log(arr)
-    let l = 0;
-    let r = arr.length - 1
-
-    while (l <= r) {
-        let m = Math.floor((l + r) / 2)
-        if (arr[m] < node) {
-            l = m + 1
-        } else if (arr[m] > node) {
-            r = m - 1
-        } else {
-            return m
-        }
-    }
-    return 'not found'
-}
-
 // Implementation of Binary Search algorithm
 // finds the leftmost occurence
 function bs_leftmost(arr, x) {
 
-    let low = 0, high = arr.length - 1;
-    let mid;
+    if (typeof x !== 'string' || !arr.length || !x.length)
+        return 'Invalid arguments'
+
+    let low = 0, high = arr.length - 1, mid;
     x = x.charCodeAt(0)
     while (low <= high) {
         mid = Math.floor((low + high) / 2);
@@ -147,15 +111,14 @@ function bs_leftmost(arr, x) {
             low = mid + 1;
         } 
     }
+
     return arr.slice(mid);
 }
 
 module.exports = {
-    itemStore, 
     match,
     crypto,
     hashString, 
-    binary_search,
     bs_leftmost,
     user_data_from_server
 }

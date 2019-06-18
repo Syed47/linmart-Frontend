@@ -1,21 +1,22 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,Dimensions,Image } from 'react-native';
-import select from './icons/select.png';
-import selected from './icons/selected.png';
-import { itemStore } from './util'
-import cross from './icons/cross.png';
+import itemStore from './stores/ItemStore';
+
+import select from '../assets/icons/select.png';
+import selected from '../assets/icons/selected.png';
+import cross from '../assets/icons/cross.png';
 
 
 class ListItem extends React.Component{
 
     constructor(props) {
         super(props);
-        this.state = {
-            checked: false,
-        }
+        this.state = { checked: false }
     }
     
-    // accessible from Stack Component
+    /*
+        add current item to checkout basket
+    */    
     addToBasket() {
         itemStore.addItem({ 
             memberid: this.props.memberid,
@@ -28,13 +29,13 @@ class ListItem extends React.Component{
         this.setState({checked: true}) 
     }
 
-    // accessible from Stack Component
+    // 
     cancelAddToBasket() {
         itemStore.setItemsSelected = itemStore.getItems.filter(i => i.itemname !== this.props.itemname) 
         this.setState({checked: false})
     }
     // accessible from Checkout Component
-    throughBackFromTheBasket() { 
+    throwBackFromTheBasket() { 
         itemStore.setItemsSelected = itemStore.getItems.filter(i => i.itemname !== this.props.itemname)
         this.props.refresh()
     }
@@ -50,7 +51,7 @@ class ListItem extends React.Component{
     }
     // can only be seen in Checkout Component
     crossBox(){
-       return this.checkCross(cross, this.throughBackFromTheBasket.bind(this));  
+       return this.checkCross(cross, this.throwBackFromTheBasket.bind(this));  
     }
     // can only be seen in Stack Component
     checkbox() {
@@ -66,7 +67,7 @@ class ListItem extends React.Component{
                         <Text style = {{color: 'white',fontSize: 24}}>
                             {this.props.itemname}
                         </Text>
-                        {/* this will render the source of the item only when the listItem gets render in Checkout.js*/}
+                        {/* this will render the source of the item only when the listItem gets render in Checkout*/}
                         {this.props.cross ? (<Text style = {{color: 'white',fontSize: 12}}>
                                                     {this.props.membername}
                                                 </Text>) : null}
@@ -97,7 +98,6 @@ const styles = StyleSheet.create({
         marginVertical: '1%',
         padding: '2%',
         backgroundColor: 'rgb(155,200,200)',
-
     },
     foodname:{
         flex: 2,

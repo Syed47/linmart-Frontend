@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet,TouchableOpacity,Image,ScrollView } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import ListItem from './ListItem';
-import {itemStore, user_data_from_server } from './util';
+import itemStore from './stores/ItemStore.js';
+import { user_data_from_server } from '../utils/util';
 
 class CheckOut extends React.Component{
 
@@ -65,15 +66,24 @@ class CheckOut extends React.Component{
 		return(
 			<View style = {styles.main}>
 				<View style = {styles.msgbox_wrapper}>
-					<Text style = {{fontSize: 20, paddingHorizontal: '2%', color: 'purple'}}>
-						Please confirm!
+					<Text style = {{
+						fontSize: 24, 
+						paddingHorizontal: '2%', 
+						color: 'purple',
+						// borderWidth: 1,
+						// borderColor: 'red',
+					}}>
+						Almost done!
 					</Text>
 	                <TouchableOpacity style={styles.buttonShape}
                         onPress={async () => { 
 								this.checkOutItems()
                          }}>
-                        <Text style={{fontSize: 18,color: 'white'}}>Confirm</Text>
-                        <Image source = {require('./icons/confirm.png')}/>
+                        <Text style={{
+                        	fontSize: 18,
+                        	color: 'purple',
+                        }}>Checkout</Text>
+                        <Image source = {require('../assets/icons/trolley.png')}/>
 	                </TouchableOpacity>
 				</View>
 				
@@ -96,7 +106,7 @@ class CheckOut extends React.Component{
 					<View style = {styles.summery_item}>
 						<Text style = {styles.variable}>Total:</Text>
 						<Text style = {styles.value}>
-							£: {this.state.totalPrice.toString().substring(0,5)}
+							£ {this.state.totalPrice.toString().substring(0,5)}
 						</Text>
 					</View>
 				</View>
@@ -129,8 +139,9 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		paddingTop: '4%',
-		paddingBottom: '2%',
+		minHeight: '5%',
+		// paddingTop: '4%',
+		// paddingBottom: '1.5%',
 		// paddingVertical: '4%',
 		paddingHorizontal: '1%',
 		// margin: '1%',
@@ -212,7 +223,9 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'space-around',
         paddingVertical: '2%',
-        marginLeft: '2%'
+        marginLeft: '2%',
+       //  							borderWidth: 1,
+							// borderColor: 'red',
     },
     text:{
     	flex: 1,

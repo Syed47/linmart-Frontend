@@ -39,7 +39,7 @@ class Profile extends React.Component {
 			<View style = {styles.main}> 
 
 				<View style = {styles.avator} > 
-                    <Image source={require('./icons/settings.png')}/>
+                    <Image source={require('../assets/icons/settings.png')}/>
                     <Text style = {{ fontSize: 22 }}> {'User Name'} </Text>
 				</View>
 

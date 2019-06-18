@@ -24,7 +24,7 @@ class Stack extends React.Component {
                     </Text>
                     <TouchableOpacity style={styles.buttonShape}
                         onPress={() => { alert(`Calling ${this.passedDetails.phone}`) }}>
-                        <Image source = {require('./icons/phone.png')}/>
+                        <Image source = {require('../assets/icons/phone.png')}/>
                     </TouchableOpacity>
 
                 </View>

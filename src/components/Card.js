@@ -2,13 +2,15 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
+
 const Card = props => {
+
     const { navigate } = props.navigation;
 
-    // id is the memberid (om server)of the member in the database
+    // id is the memberid (on server) of the member in the database
     const {id, membername, area, status, rating, phone } = props.info;
     const ratingIcon = <Image style={styles.star} 
-                         source={require('./icons/greenstar.png')} />
+                         source={require('../assets/icons/greenstar.png')} />
 
     const arr = new Array(rating).fill(ratingIcon)
 
@@ -34,7 +36,7 @@ const Card = props => {
                             data.length === 0 ? alert(`Sorry! ${membername} have no items for sale!`) : null
                         } else if (status === 'close'){
                             alert(`Sorry! ${membername} is close at the moment!`)
-                            props.info.menu = []// assign blank array to avoid errors further in the app
+                            props.info.menu = []// ass ign blank array to avoid errors further in the app
                         } else {
                             alert(`Sorry! ${membername} is not providing the service. You may call them for any help.`)
                             props.info.menu = []// assign blank array to avoid errors further in the app
@@ -48,7 +50,10 @@ const Card = props => {
 
             <View style={styles.thumbnail_wrapper}>
                 <Image style = {styles.thumbnail}
-                    source = {require('./icons/store.png')}/>
+                    source = {
+                        {uri: `http://172.20.10.2:4000/image/${id}`}
+                        // require('../assets/icons/store.png')
+                }/>
             </View>
 
             <View style={styles.info_wrapper}>
@@ -110,16 +115,16 @@ const styles = StyleSheet.create({
     },
     thumbnail: {
         flex: 1,
-        borderRadius: 25,
-        minWidth: '95%',
-        minWidth: '100%'
+        borderRadius: 4,
+        width: '100%',
+        height: '100%'
     },
     name_wrapper:{
         flex: 1,
         borderBottomColor: 'red',
         borderBottomWidth: 1,
         paddingHorizontal: 20,
-        paddingTop: 5,
+        paddingTop: '4%',
     },
     status_wrapper:{
         flex:1,
@@ -128,15 +133,14 @@ const styles = StyleSheet.create({
         borderBottomColor: 'red',
         borderBottomWidth: 1,
         paddingHorizontal: 10,
-        paddingTop: 5,
+        paddingTop: '4%',
     },
     rating_wrapper:{
         flex: 1,
         justifyContent: 'space-between',
         flexDirection: 'row',
         paddingHorizontal: 10,
-        paddingTop: 5,
-
+        paddingTop: '4%',
     },
     stars:{
         flex: 1,
@@ -144,7 +148,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         flexDirection: 'row',
         paddingHorizontal: 10,
-        paddingTop: 5,
+        paddingTop: '4%',
     },
     star:{margin: 2},
 
